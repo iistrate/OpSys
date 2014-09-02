@@ -39,6 +39,9 @@ int UserInput::getCommand() {
 			case SDLK_RCTRL:
 				m_ipressed = CONTROLS::CAMERA_MODE;
 				break;
+			case SDLK_SPACE:
+				m_ipressed = CONTROLS::CPANEL;
+				break;
 			}
 			break;
 		//if key is released

@@ -82,6 +82,7 @@ GUI::GUI(int h, int w, int x, int y): m_bvisible(true) {
 			}
 		}
 	}
+	/*
 	//add play btn
 	m_Images.push_back(new Image("assets/sprites-ui.png", 125, 890, 20, 33, 438, 222, 3, 0, 0, 0, true));
 	//add back btn
@@ -90,6 +91,7 @@ GUI::GUI(int h, int w, int x, int y): m_bvisible(true) {
 	m_Images.push_back(new Image("assets/sprites-ui.png", 225, 890, 33, 33, 467, 222, 3, 0, 0, 0, true));
 	//add pause btn
 	m_Images.push_back(new Image("assets/sprites-ui.png", 175, 890, 22, 33, 399, 222, 3, 0, 0, 0, true));
+	*/
 }
 
 void GUI::getImages(std::vector < Image* > &f_Images) {

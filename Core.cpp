@@ -2,7 +2,7 @@
 
 Core::Core() :m_brunning(false), m_pRenderer(0), m_pWindow(0), m_fps(0), 
 m_fpsCap(Globals::FPS_CAP), m_turn(0), m_bdebugMode(false), m_bcameraMode(false), m_bexecute(false),
-m_commandCursor(0), m_bcontrolPanel(false), m_bcreatedPanel(false) {
+m_commandCursor(0), m_bshowcPanel(false), m_bcreatedPanel(false) {
 }
 
 void Core::init(const char* title, int x, int y, int w, int h, int flags) {
@@ -33,40 +33,49 @@ void Core::run() {
 	init("the E1 2000 Operating System", 50, 50, WINDOW::SCREEN_WIDTH, WINDOW::SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 	
 	int uinput;
-
-	//command panel
-//	Panel.buildPanel(200, 1350, 0, 750);
-//	Panel.getImages(m_Images_CMD);
 	
 	time_t tm;
 	std::string stime;
+
 	do {
+		//events
 		uinput = Ui.getCommand();
+		//written
+		//get command from input
+		m_scommand = Ui.getStringCommand();
+		//send string to python and get sanitized string and list of commands as a vector of ints
+		//m_scommand = Sparser.parseString(m_icommand, m_scommand);
+		Ui.setStringCommand(m_scommand);
 
 		switch (uinput) {
-		case CONTROLS::QUIT:
-			quit();
-			break;
-		case CONTROLS::DEBUG_MODE:
-			m_bdebugMode = m_bdebugMode == true ? false : true;
-			break;
-		case CONTROLS::RIGHT_CLICK:
-			m_bcontrolPanel = m_bcontrolPanel == true ? false : true;
-			break;
+			case CONTROLS::QUIT:
+				quit();
+				break;
+			case CONTROLS::DEBUG_MODE:
+				m_bdebugMode = m_bdebugMode == false ? true : false;
+				break;
+			case CONTROLS::RIGHT_CLICK:
+				break;
+			case CONTROLS::CPANEL:
+				m_bshowcPanel = m_bshowcPanel == false ? true : false;
+				break;
+			case CONTROLS::CAMERA_MODE:
+				m_bshowcPanel = m_bshowcPanel == false ? true : false;
+				break;
 		}
 
 
 		//cpanel right click
-		if (m_bcontrolPanel) {
+		if (m_bshowcPanel) {
 			//check if the panel has been created; if not create one
 			if (!m_bcreatedPanel) {
-				GUI* Panel = new GUI(300, 400, Ui.getMouseX(), Ui.getMouseY());
+				//create panel
+				GUI* Panel = new GUI(300, 400, 500, 300);
+				//get images
+				Panel->getImages(m_Images_CMD);
 				//set flag
 				m_bcreatedPanel = true;
-				Panel->getImages(m_Images);
 			}
-			//remove flag
-			m_bcontrolPanel = false;
 		}
 
 		time(&tm);
@@ -78,12 +87,24 @@ void Core::run() {
 		//set color bg to white
 		SDL_SetRenderDrawColor(m_pRenderer, 255, 255, 255, 255);
 
-		//draw images
+		//show images
 		Tmanager.draw(m_pRenderer, m_Images);
+		//show panel
+		m_bshowcPanel = true;
+		if (m_bshowcPanel) {
+			Tmanager.draw(m_pRenderer, m_Images_CMD);
+			Tmanager.drawText(m_pRenderer, "Display Version", 490, 330);
+			Tmanager.drawText(m_pRenderer, "Display Date", 490, 360);
+			Tmanager.drawText(m_pRenderer, "Display Help", 490, 390);
+			Tmanager.drawText(m_pRenderer, "Directory Explorer", 490, 420);
+			Tmanager.drawText(m_pRenderer, "Debug Mode", 490, 450);
+			Tmanager.drawText(m_pRenderer, "Quit", 490, 480);
+			Tmanager.drawText(m_pRenderer, "Command: " + m_scommand, 490, 520, Globals::COMMAND_PANEL_LINE_WRAP, true);
+		}
 
 		//draw text
-		Tmanager.drawText(m_pRenderer, "E1 200 ver: Pawn Chess", 20, 10);
-		Tmanager.drawText(m_pRenderer, stime, 350, 10);
+		Tmanager.drawText(m_pRenderer, "E1 200 ver: Pawn Chess", 20, 30);
+		Tmanager.drawText(m_pRenderer, stime, 20, 10);
 
 
 
