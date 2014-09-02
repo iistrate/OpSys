@@ -49,7 +49,7 @@ void Core::run() {
 			m_bdebugMode = m_bdebugMode == true ? false : true;
 			break;
 		case CONTROLS::RIGHT_CLICK:
-			m_bcontrolPanel = true;
+			m_bcontrolPanel = m_bcontrolPanel == true ? false : true;
 			break;
 		}
 
@@ -65,10 +65,16 @@ void Core::run() {
 		SDL_SetRenderDrawColor(m_pRenderer, 255, 255, 255, 255);
 
 		//draw images
-		//Tmanager.draw(m_pRenderer, m_Images);
+		Tmanager.draw(m_pRenderer, m_Images);
+
+		//draw text
 		Tmanager.drawText(m_pRenderer, "E1 200 ver: Pawn Chess", 20, 10);
 		Tmanager.drawText(m_pRenderer, stime, 350, 10);
 
+		if (m_bcontrolPanel) {
+			Panel.buildPanel(500, 200, Ui.getMouseX(), Ui.getMouseY());
+			Panel.getImages(m_Images);
+		}
 
 		//Debug mode
 		if (m_bdebugMode) {

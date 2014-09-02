@@ -7,6 +7,7 @@
 #include "TextureManager.h"
 #include "Globals.h"
 #include "UserInput.h"
+#include "GUI.h"
 
 
 class Core {
@@ -39,6 +40,7 @@ private:
 	//composition
 	TextureManager Tmanager;
 	UserInput Ui;
+	GUI Panel;
 
 	//image sets
 	std::vector < Image* > m_Images;

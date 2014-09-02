@@ -12,7 +12,7 @@ private:
 	std::vector <Image *> m_Images;
 public:
 	GUI();
-	void buildPanel(int, int);
+	void buildPanel(int, int, int, int);
 	void getImages(std::vector < Image* > &f_Images);
 };
 

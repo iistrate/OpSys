@@ -1,10 +1,11 @@
 #include "GUI.h"
+#include <iostream>
 
 GUI::GUI() {
 
 }
 
-void GUI::buildPanel(int h, int w) {
+void GUI::buildPanel(int h, int w, int x, int y) {
 
 	//size of vector, figure out how many tiles we need
 	int tileHeight = 32;
@@ -12,9 +13,11 @@ void GUI::buildPanel(int h, int w) {
 	m_vectorY = h / tileHeight;
 	m_vectorX = (w / tileWidth) * 0.45;
 
+	std::cout << x << " " << y;
+
 	//custom images for left panel
-	for (int i = 0; i < m_vectorY; i++) {
-		for (int j = 0; j < m_vectorX; j++) {
+	for (int i = y; i < m_vectorY + y; i++) {
+		for (int j = x; j < m_vectorX + x; j++) {
 			//bordered left
 			if (j == 0) {
 				//top row
