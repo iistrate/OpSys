@@ -1,9 +1,13 @@
 #ifndef CORE_H
 #define CORE_H
 
+#include <ctime>
+#include <string>
+
 #include "TextureManager.h"
 #include "Globals.h"
 #include "UserInput.h"
+
 
 class Core {
 private:
@@ -52,6 +56,8 @@ public:
 	void quit();
 	//fps
 	void fpsCap();
+	//get time
+	std::string getTime(const time_t time);
 };
 
 #endif

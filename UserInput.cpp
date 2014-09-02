@@ -51,11 +51,12 @@ int UserInput::getCommand() {
 		case SDL_MOUSEBUTTONDOWN:
 			if (SDL_BUTTON_LEFT) {
 				m_ipressed = LEFT_CLICK;
+				break;
 			}
 			if (SDL_BUTTON_RIGHT) {
 				m_ipressed = RIGHT_CLICK;
+				break;
 			}
-			break;
 		case SDL_MOUSEBUTTONUP:
 			m_ipressed = 0;
 			break;

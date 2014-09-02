@@ -34,6 +34,8 @@ void Core::run() {
 	
 	int uinput;
 	
+	time_t tm;
+	std::string stime;
 	do {
 		uinput = Ui.getCommand();
 
@@ -51,6 +53,9 @@ void Core::run() {
 			break;
 		}
 
+		time(&tm);
+		stime = getTime(tm);
+
 		//Conways->getImages(m_Images);
 
 		//clear window
@@ -62,6 +67,7 @@ void Core::run() {
 		//draw images
 		//Tmanager.draw(m_pRenderer, m_Images);
 		Tmanager.drawText(m_pRenderer, "E1 200 ver: Pawn Chess", 20, 10);
+		Tmanager.drawText(m_pRenderer, stime, 350, 10);
 
 
 		//Debug mode
@@ -96,6 +102,24 @@ void Core::fpsCap() {
 }
 void Core::quit() {
 	m_brunning = false;
+}
+
+std::string Core::getTime(const time_t time) {
+
+	struct tm ts;
+	char szBuffer[80] = "DD-MM-YY"; //  HH:MM:SS
+
+	errno_t err = localtime_s(&ts, &time);
+
+	if (err)
+	{
+	}
+	else
+	{
+		// Format the time
+		strftime(szBuffer, sizeof(szBuffer), "Date is: %d %b %Y", &ts); //  %X%p
+	}
+	return szBuffer;
 }
 Core::~Core() {
 	//sdl cleanup; font cleanup handled in tmanager
