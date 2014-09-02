@@ -2,7 +2,7 @@
 #define GLOBALS_H
 
 namespace Globals {
-	const int FPS_CAP = 90;
+	const int FPS_CAP = 60;
 }
 
 enum WINDOW {
@@ -11,7 +11,7 @@ enum WINDOW {
 };
 
 enum CONTROLS {
-	QUIT,
+	QUIT = 1,
 	DEBUG_MODE,
 	CAMERA_MODE,
 	LEFT_CLICK,

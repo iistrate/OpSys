@@ -2,7 +2,7 @@
 
 Core::Core() :m_brunning(false), m_pRenderer(0), m_pWindow(0), m_fps(0), 
 m_fpsCap(Globals::FPS_CAP), m_turn(0), m_bdebugMode(false), m_bcameraMode(false), m_bexecute(false),
-m_commandCursor(0) {
+m_commandCursor(0), m_bcontrolPanel(false) {
 }
 
 void Core::init(const char* title, int x, int y, int w, int h, int flags) {
@@ -30,10 +30,27 @@ void Core::init(const char* title, int x, int y, int w, int h, int flags) {
 }
 
 void Core::run() {
-	init("the E1 2000 Operating System", 0, 0, WINDOW::SCREEN_WIDTH, WINDOW::SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-
+	init("the E1 2000 Operating System", 50, 50, WINDOW::SCREEN_WIDTH, WINDOW::SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+	
+	int uinput;
+	
 	do {
-		void;
+		uinput = Ui.getCommand();
+
+		std::cout << uinput << std::endl;
+
+		switch (uinput) {
+		case CONTROLS::QUIT:
+			quit();
+			break;
+		case CONTROLS::DEBUG_MODE:
+			m_bdebugMode = m_bdebugMode == true ? false : true;
+			break;
+		case CONTROLS::RIGHT_CLICK:
+			m_bcontrolPanel = true;
+			break;
+		}
+
 		//Conways->getImages(m_Images);
 
 		//clear window
@@ -44,7 +61,22 @@ void Core::run() {
 
 		//draw images
 		//Tmanager.draw(m_pRenderer, m_Images);
-		Tmanager.drawText(m_pRenderer, "E1 200", 200, 500);
+		Tmanager.drawText(m_pRenderer, "E1 200 ver: Pawn Chess", 20, 10);
+
+
+		//Debug mode
+		if (m_bdebugMode) {
+			/*
+			text
+			*/
+			//show command
+			Tmanager.drawText(m_pRenderer, "Command: " + std::to_string(uinput), 550, 10);
+			//show turn
+			Tmanager.drawText(m_pRenderer, "TURN: " + std::to_string(m_turn) + "  FPS:" + std::to_string(m_fpsCap), 1000, 10);
+			//show mouse position
+			Tmanager.drawText(m_pRenderer, "X: " + std::to_string(Ui.getMouseX()) + " Y: " + std::to_string(Ui.getMouseY()), 570, 870);
+		}
+
 
 		SDL_RenderPresent(m_pRenderer);
 		//cap fps

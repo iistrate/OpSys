@@ -15,7 +15,7 @@ int UserInput::getCommand() {
 		case SDL_KEYDOWN:
 			switch (event.key.keysym.sym) {
 			case SDLK_ESCAPE:
-				m_ipressed = CONTROLS::QUIT;
+				m_ipressed = QUIT;
 				break;
 			case SDLK_RETURN:
 				m_scommand += "\n";
@@ -52,7 +52,7 @@ int UserInput::getCommand() {
 			if (SDL_BUTTON_LEFT) {
 				m_ipressed = LEFT_CLICK;
 			}
-			else {
+			if (SDL_BUTTON_RIGHT) {
 				m_ipressed = RIGHT_CLICK;
 			}
 			break;

@@ -21,6 +21,7 @@ private:
 	bool m_bexecute;
 	bool m_brunning;
 	bool m_bcameraMode;
+	bool m_bcontrolPanel;
 
 	//fps thingy
 	Uint32 m_fps;
