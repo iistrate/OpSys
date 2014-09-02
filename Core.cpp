@@ -2,7 +2,7 @@
 
 Core::Core() :m_brunning(false), m_pRenderer(0), m_pWindow(0), m_fps(0), 
 m_fpsCap(Globals::FPS_CAP), m_turn(0), m_bdebugMode(false), m_bcameraMode(false), m_bexecute(false),
-m_commandCursor(0), m_bshowcPanel(false), m_bcreatedPanel(false) {
+m_commandCursor(0), m_bshowcPanel(false), m_bcreatedPanel(false), m_bshowDate(false), m_bshowHelp(false), m_bshowVersion(false) {
 }
 
 void Core::init(const char* title, int x, int y, int w, int h, int flags) {
@@ -37,6 +37,11 @@ void Core::run() {
 	time_t tm;
 	std::string stime;
 
+	//create panel
+	GUI* Panel = new GUI(300, 400, 500, 300);
+	//get images
+	Panel->getImages(m_Images_CMD);
+
 	do {
 		//events
 		uinput = Ui.getCommand();
@@ -55,6 +60,35 @@ void Core::run() {
 				m_bdebugMode = m_bdebugMode == false ? true : false;
 				break;
 			case CONTROLS::RIGHT_CLICK:
+				//check if panel is opened
+				if (m_bshowcPanel) {
+					//check if it is in the panel are
+					if (Ui.getMouseX() >= 480 && Ui.getMouseX() <= 730) {
+						if (Ui.getMouseY() >= 290 && Ui.getMouseY() <= 570) {
+							//send x and y to panel
+							switch (Panel->clicked(Ui.getMouseX(), Ui.getMouseY())) {
+							case SHOW_VERSION:
+								m_bshowVersion = m_bshowVersion == false ? true : false;
+								break;
+							case SHOW_DATE:
+								m_bshowDate = m_bshowDate == false ? true : false;
+								break;
+							case SHOW_HELP:
+								m_bshowHelp = m_bshowHelp == false ? true : false;
+								break;
+							case DEBUG_MODE:
+								m_bdebugMode = m_bdebugMode == false ? true : false;
+								break;
+							case SHOW_DIRECTORY:
+								break;
+							case QUIT:
+								quit();
+								break;
+							}
+							//std::cout << "clicked panel area" << std::endl;  //debug
+						}
+					}
+				}
 				break;
 			case CONTROLS::CPANEL:
 				m_bshowcPanel = m_bshowcPanel == false ? true : false;
@@ -62,20 +96,6 @@ void Core::run() {
 			case CONTROLS::CAMERA_MODE:
 				m_bshowcPanel = m_bshowcPanel == false ? true : false;
 				break;
-		}
-
-
-		//cpanel right click
-		if (m_bshowcPanel) {
-			//check if the panel has been created; if not create one
-			if (!m_bcreatedPanel) {
-				//create panel
-				GUI* Panel = new GUI(300, 400, 500, 300);
-				//get images
-				Panel->getImages(m_Images_CMD);
-				//set flag
-				m_bcreatedPanel = true;
-			}
 		}
 
 		time(&tm);
@@ -103,10 +123,15 @@ void Core::run() {
 		}
 
 		//draw text
-		Tmanager.drawText(m_pRenderer, "E1 200 ver: Pawn Chess", 20, 30);
-		Tmanager.drawText(m_pRenderer, stime, 20, 10);
-
-
+		if (m_bshowVersion) {
+			Tmanager.drawText(m_pRenderer, "E1 200 ver: Pawn Chess", 20, 30);
+		}
+		if (m_bshowDate) {
+			Tmanager.drawText(m_pRenderer, stime, 20, 10);
+		}
+		if (m_bshowHelp) {
+			Tmanager.drawText(m_pRenderer, stime, 20, 10);
+		}
 
 		//Debug mode
 		if (m_bdebugMode) {

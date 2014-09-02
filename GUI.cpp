@@ -1,5 +1,6 @@
 #include "GUI.h"
 #include <iostream>
+#include "Globals.h"
 
 GUI::GUI(int h, int w, int x, int y): m_bvisible(true) {
 
@@ -116,4 +117,35 @@ bool GUI::isVisible() {
 }
 void GUI::setVisible(bool b) {
 	m_bvisible = b;
+}
+int GUI::clicked(int x, int y) {
+	//check menus
+	//x is for all, only y changes
+	if (x >= 485 && x <= 725) {
+		//show version
+		if (y >= 330 && y <= 350) {
+			return CONTROLS::SHOW_VERSION;
+		}
+		//show date
+		if (y >= 360 && y <= 380) {
+			return CONTROLS::SHOW_DATE;
+		}
+		//show help
+		if (y >= 390 && y <= 410) {
+			return CONTROLS::SHOW_HELP;
+		}
+		//show directory
+		if (y >= 420 && y <= 440) {
+			return CONTROLS::SHOW_DIRECTORY;
+		}
+		//show debug mode
+		if (y >= 450 && y <= 470) {
+			return CONTROLS::DEBUG_MODE;
+		}
+		//quit
+		if (y >= 480 && y <= 500) {
+			return CONTROLS::QUIT;
+		}
+	}
+	return 0;
 }

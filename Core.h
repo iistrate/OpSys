@@ -27,8 +27,13 @@ private:
 	bool m_brunning;
 	bool m_bcameraMode;
 	bool m_bshowcPanel;
+	bool m_bshowVersion;
+	bool m_bshowDate;
+	bool m_bshowHelp;
 
 	bool m_bcreatedPanel;
+
+
 
 	//fps thingy
 	Uint32 m_fps;

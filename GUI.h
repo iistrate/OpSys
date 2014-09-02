@@ -18,6 +18,10 @@ private:
 	//flags
 	bool m_bvisible;
 
+	//catch clicks
+	int clickx;
+	int clicky;
+
 	std::vector <Image *> m_Images;
 public:
 	GUI(int h, int w, int x, int y);
@@ -32,6 +36,8 @@ public:
 
 	bool isVisible();
 	void setVisible(bool);
+
+	int clicked(int x, int y);
 };
 
 #endif // end GUI.h
