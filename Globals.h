@@ -2,7 +2,7 @@
 #define GLOBALS_H
 
 namespace Globals {
-	const int FPS_CAP = 60;
+	const int FPS_CAP = 10;
 }
 
 enum WINDOW {

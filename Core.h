@@ -27,6 +27,7 @@ private:
 	bool m_brunning;
 	bool m_bcameraMode;
 	bool m_bcontrolPanel;
+	bool m_bcreatedPanel;
 
 	//fps thingy
 	Uint32 m_fps;
@@ -40,10 +41,11 @@ private:
 	//composition
 	TextureManager Tmanager;
 	UserInput Ui;
-	GUI Panel;
+	GUI* Panel;
 
 	//image sets
 	std::vector < Image* > m_Images;
+	std::vector < Image* > m_Images_CMD;
 
 public:
 	Core();

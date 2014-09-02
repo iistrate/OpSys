@@ -2,7 +2,7 @@
 
 Core::Core() :m_brunning(false), m_pRenderer(0), m_pWindow(0), m_fps(0), 
 m_fpsCap(Globals::FPS_CAP), m_turn(0), m_bdebugMode(false), m_bcameraMode(false), m_bexecute(false),
-m_commandCursor(0), m_bcontrolPanel(false) {
+m_commandCursor(0), m_bcontrolPanel(false), m_bcreatedPanel(false) {
 }
 
 void Core::init(const char* title, int x, int y, int w, int h, int flags) {
@@ -33,13 +33,15 @@ void Core::run() {
 	init("the E1 2000 Operating System", 50, 50, WINDOW::SCREEN_WIDTH, WINDOW::SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 	
 	int uinput;
+
+	//command panel
+//	Panel.buildPanel(200, 1350, 0, 750);
+//	Panel.getImages(m_Images_CMD);
 	
 	time_t tm;
 	std::string stime;
 	do {
 		uinput = Ui.getCommand();
-
-		std::cout << uinput << std::endl;
 
 		switch (uinput) {
 		case CONTROLS::QUIT:
@@ -53,10 +55,22 @@ void Core::run() {
 			break;
 		}
 
+
+		//cpanel right click
+		if (m_bcontrolPanel) {
+			//check if the panel has been created; if not create one
+			if (!m_bcreatedPanel) {
+				GUI* Panel = new GUI(300, 400, Ui.getMouseX(), Ui.getMouseY());
+				//set flag
+				m_bcreatedPanel = true;
+				Panel->getImages(m_Images);
+			}
+			//remove flag
+			m_bcontrolPanel = false;
+		}
+
 		time(&tm);
 		stime = getTime(tm);
-
-		//Conways->getImages(m_Images);
 
 		//clear window
 		SDL_RenderClear(m_pRenderer);
@@ -71,10 +85,7 @@ void Core::run() {
 		Tmanager.drawText(m_pRenderer, "E1 200 ver: Pawn Chess", 20, 10);
 		Tmanager.drawText(m_pRenderer, stime, 350, 10);
 
-		if (m_bcontrolPanel) {
-			Panel.buildPanel(500, 200, Ui.getMouseX(), Ui.getMouseY());
-			Panel.getImages(m_Images);
-		}
+
 
 		//Debug mode
 		if (m_bdebugMode) {
