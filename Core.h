@@ -8,6 +8,7 @@
 #include "Globals.h"
 #include "UserInput.h"
 #include "GUI.h"
+#include <Python.h>
 
 
 class Core {
@@ -30,6 +31,7 @@ private:
 	bool m_bshowVersion;
 	bool m_bshowDate;
 	bool m_bshowHelp;
+	bool m_bshowDir;
 
 	bool m_bcreatedPanel;
 
@@ -68,6 +70,9 @@ public:
 	void fpsCap();
 	//get time
 	std::string getTime(const time_t time);
+
+	//list dir
+	std::string listDir();
 };
 
 #endif

@@ -41,6 +41,7 @@ void Core::run() {
 	GUI* Panel = new GUI(300, 400, 500, 300);
 	//get images
 	Panel->getImages(m_Images_CMD);
+	std::string directory = listDir();
 
 	do {
 		//events
@@ -80,6 +81,7 @@ void Core::run() {
 								m_bdebugMode = m_bdebugMode == false ? true : false;
 								break;
 							case SHOW_DIRECTORY:
+								m_bshowDir = m_bshowDir == false ? true : false;
 								break;
 							case QUIT:
 								quit();
@@ -109,8 +111,9 @@ void Core::run() {
 
 		//show images
 		Tmanager.draw(m_pRenderer, m_Images);
+		Tmanager.drawText(m_pRenderer, "Howdy, welcome to the E1 2000 please press right ctrl for menu Thanks!", 470, 210);
+
 		//show panel
-		m_bshowcPanel = true;
 		if (m_bshowcPanel) {
 			Tmanager.draw(m_pRenderer, m_Images_CMD);
 			Tmanager.drawText(m_pRenderer, "Display Version", 490, 330);
@@ -124,13 +127,16 @@ void Core::run() {
 
 		//draw text
 		if (m_bshowVersion) {
-			Tmanager.drawText(m_pRenderer, "E1 200 ver: Pawn Chess", 20, 30);
+			Tmanager.drawText(m_pRenderer, "E1 2000 ver: Pawn Chess", 20, 30);
 		}
 		if (m_bshowDate) {
 			Tmanager.drawText(m_pRenderer, stime, 20, 10);
 		}
 		if (m_bshowHelp) {
-			Tmanager.drawText(m_pRenderer, stime, 20, 10);
+			Tmanager.drawText(m_pRenderer, "Help: Howdy murricans; please press version for op sys version, date for showing date, help for showing this text, directory for showing the directory and quit for quit; please note that you can also add commands to the command line. Thanks!", 20, 50);
+		}
+		if (m_bshowDir) {
+			Tmanager.drawText(m_pRenderer, directory, 1000, 230);
 		}
 
 		//Debug mode
@@ -191,4 +197,44 @@ Core::~Core() {
 	m_pWindow = 0;
 	SDL_DestroyRenderer(m_pRenderer);
 	m_pRenderer = 0;
+}
+std::string Core::listDir() {
+	//setup 
+	//Py Objects
+	PyObject *m_POname, *m_POmodule, *m_POfunctionName, *m_POvalues, *m_POstring, *m_POlist;
+	//gil state
+	PyGILState_STATE m_gstate;
+
+	//begin
+	Py_Initialize();
+	//init threads
+	if (!PyEval_ThreadsInitialized()) {
+		PyEval_InitThreads();
+	}
+	//on init lock gil state
+	m_gstate = PyGILState_Ensure();
+
+	//module name
+	const char module[] = "Parser";
+
+	//build c string to py object string
+	m_POname = Py_BuildValue("s", module);
+	//load module into py object
+	m_POmodule = PyImport_Import(m_POname);
+
+	if (Py_IsInitialized) {
+		//if module is loaded
+		if (m_POmodule) {
+			//load function
+			m_POfunctionName = PyObject_GetAttrString(m_POmodule, "listDir");
+		}
+		//if function exists and is callable
+		if (m_POfunctionName && PyCallable_Check(m_POfunctionName)) {
+			m_POvalues = PyObject_CallFunction(m_POfunctionName, NULL);
+		}
+		m_POstring = m_POvalues;
+	}
+	Py_Finalize();
+	//return parsed string
+	return PyUnicode_AsUTF8(m_POstring);
 }
