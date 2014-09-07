@@ -17,6 +17,7 @@ private:
 
 public:
 	PCB();
+	~PCB();
 	void setName(char** name);
 	void setClass(int pclass);
 	void setPriority(int priority);

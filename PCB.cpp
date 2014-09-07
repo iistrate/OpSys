@@ -3,6 +3,11 @@
 PCB::PCB(): m_sname(0), m_ipriority(0), m_iprocessClass(0), m_iprocessState(0) {
 
 }
+PCB::~PCB() {
+	delete this;
+}
+
+
 void PCB::setName(char** name) {
 	m_sname = name;
 }

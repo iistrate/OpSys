@@ -21,9 +21,16 @@ private:
 public:
 	PCBQueue(bool state);
 
+	//create pcb
 	PCB* allocatePCB();
+	//destroy pcb
+	void freePCB(PCB*);
+	//setup PCB
+	void setupPCB(char** name, int priority, int classType);
 
+	//count pcbs in queue
 	int getPCBCount();
+	//get type of queue
 	bool getState();
 	void addPCB();
 };
