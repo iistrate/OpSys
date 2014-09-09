@@ -5,12 +5,15 @@
 
 class PCBQueue {
 private:
-
+	
 	struct PCBNode {
 		PCBNode* next;
 		PCBNode* prev;
-		PCB* data;
+		PCB* Pcb;
 	};
+	PCBNode* m_head;
+	PCBNode* m_tail;
+
 
 	//count of PCB's
 	int m_iPCBcount;
@@ -26,7 +29,12 @@ public:
 	//destroy pcb
 	void freePCB(PCB*);
 	//setup PCB
-	void setupPCB(char** name, int priority, int classType);
+	PCB* setupPCB(std::string name, int priority, int classType);
+	//find PCB
+
+	void insertPCB(PCB* pcb);
+
+	PCB* findPCB(std::string name);
 
 	//count pcbs in queue
 	int getPCBCount();

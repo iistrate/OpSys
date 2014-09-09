@@ -8,7 +8,7 @@ PCB::~PCB() {
 }
 
 
-void PCB::setName(char** name) {
+void PCB::setName(std::string name) {
 	m_sname = name;
 }
 void PCB::setClass(int pclass) {
@@ -21,7 +21,7 @@ void PCB::setState(int state) {
 	m_iprocessState = state;
 }
 
-char** PCB::getName() {
+std::string PCB::getName() {
 	return m_sname;
 }
 int PCB::getClass() {

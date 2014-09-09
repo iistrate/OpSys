@@ -1,6 +1,8 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
+#include <iostream>
+
 namespace Globals {
 	const int FPS_CAP = 10;
 	const int COMMAND_PANEL_LINE_WRAP = 200;

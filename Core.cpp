@@ -37,6 +37,12 @@ void Core::run() {
 	time_t tm;
 	std::string stime;
 
+	//create process queues
+	Ready = new PCBQueue(true);
+	Blocked = new PCBQueue(false);
+		//testing
+	PCB* test = new PCB();
+
 	//create panel
 	GUI* Panel = new GUI(300, 400, 500, 300);
 	//get images
