@@ -1,8 +1,9 @@
 #include "PCBQueue.h"
 
 //set state of PCB
-PCBQueue::PCBQueue(bool state): m_head(0), m_tail(0), m_iPCBcount(0) {
-	m_bstate = state;
+PCBQueue::PCBQueue(bool state) : m_iPCBcount(0), m_bstate(state) {
+	m_head = new PCBNode;
+	m_tail = new PCBNode;
 }
 
 //allocate PCB
@@ -26,7 +27,7 @@ PCB* PCBQueue::setupPCB(std::string name, int priority, int classType) {
 	PCB* pcb = 0;
 	bool allocate = false;
 	//errror check
-	if (name.size() > 0) {
+	if (!name.empty()) {
 		if (priority >= -127 && priority <= 127) {
 			if (classType == SYSTEM_TYPE || classType == APPLICATION) {
 				allocate = true;
@@ -35,7 +36,7 @@ PCB* PCBQueue::setupPCB(std::string name, int priority, int classType) {
 	}
 	//allocate pcb
 	if (allocate) {
-		PCB* pcb = allocatePCB();
+		pcb = allocatePCB();
 		pcb->setName(name);
 		pcb->setClass(classType);
 		pcb->setPriority(priority);
@@ -44,10 +45,10 @@ PCB* PCBQueue::setupPCB(std::string name, int priority, int classType) {
 	return pcb;
 }
 void PCBQueue::insertPCB(PCB* pcb) {
+	//node to be inserted
+	PCBNode* newNode = new PCBNode;
 	//if there's no PCB's
 	if (m_iPCBcount == 0) {
-		//create node for pcb
-		PCBNode* newNode = 0;
 		//assign passed pcb to node
 		newNode->Pcb = pcb;
 		//link frontend
@@ -66,8 +67,6 @@ void PCBQueue::insertPCB(PCB* pcb) {
 	//if there's PCB's in queue then navigate nodes to find the last one; pretty much just get the prev from last
 	else {
 		//we know the last node is m_tail; we want the prev from it
-		//create node for pcb
-		PCBNode* newNode = 0;
 		//assign passed pcb to node
 		newNode->Pcb = pcb;
 		//integrate in list

@@ -167,6 +167,12 @@ void Core::run() {
 			std::cout << "PCB Name: " << test->getName() << std::endl;
 			std::cout << "PCB State: " << test->getState() << std::endl;
 			std::cout << "PCB Priority: " << test->getPriority() << std::endl;
+
+			//testing setup in queue
+			std::cout << "name from setupPCB " << Ready->setupPCB("name", 120, APPLICATION)->getName();
+			//testing insertion and finding
+			Ready->insertPCB(Ready->setupPCB("my first pcb", 120, APPLICATION));
+			std::cout << "Find pcb by name; getting priority: " << Ready->findPCB("my first pcb")->getPriority() << std::endl;
 		}
 
 
