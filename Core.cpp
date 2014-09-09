@@ -40,8 +40,6 @@ void Core::run() {
 	//create process queues
 	Ready = new PCBQueue(true);
 	Blocked = new PCBQueue(false);
-		//testing
-	PCB* test = new PCB();
 
 	//create panel
 	GUI* Panel = new GUI(300, 400, 500, 300);
@@ -156,6 +154,19 @@ void Core::run() {
 			Tmanager.drawText(m_pRenderer, "TURN: " + std::to_string(m_turn) + "  FPS:" + std::to_string(m_fpsCap), 1000, 10);
 			//show mouse position
 			Tmanager.drawText(m_pRenderer, "X: " + std::to_string(Ui.getMouseX()) + " Y: " + std::to_string(Ui.getMouseY()), 570, 870);
+
+
+			//testing PCB
+			PCB* test = new PCB();
+			test->setClass(PCBi::APPLICATION);
+			test->setName("Some name");
+			test->setPriority(120);
+			test->setState(PCBi::PROCESS_STATE_BLOCKED);
+
+			std::cout << "PCB Class: " << test->getClass() << std::endl;
+			std::cout << "PCB Name: " << test->getName() << std::endl;
+			std::cout << "PCB State: " << test->getState() << std::endl;
+			std::cout << "PCB Priority: " << test->getPriority() << std::endl;
 		}
 
 
