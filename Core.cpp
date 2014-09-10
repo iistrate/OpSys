@@ -48,6 +48,9 @@ void Core::run() {
 	Panel->getImages(m_Images_CMD);
 	std::string directory = listDir();
 
+	StringParser* Parser = new StringParser;
+	Parser->init();
+
 	do {
 		//events
 		uinput = Ui.getCommand();
@@ -55,8 +58,9 @@ void Core::run() {
 		//get command from input
 		m_scommand = Ui.getStringCommand();
 		//send string to python and get sanitized string and list of commands as a vector of ints
-		//m_scommand = Sparser.parseString(m_icommand, m_scommand);
+		m_scommand = Parser->parseString(m_icommand, m_scommand);
 		Ui.setStringCommand(m_scommand);
+
 
 		switch (uinput) {
 			case CONTROLS::QUIT:
@@ -241,7 +245,7 @@ std::string Core::listDir() {
 	m_gstate = PyGILState_Ensure();
 
 	//module name
-	const char module[] = "Parser";
+	const char module[] = "ListDir";
 
 	//build c string to py object string
 	m_POname = Py_BuildValue("s", module);

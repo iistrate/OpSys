@@ -9,7 +9,7 @@
 #include "UserInput.h"
 #include "GUI.h"
 #include "PCBQueue.h"
-#include <Python.h>
+#include "StringParser.h"
 
 
 class Core {
@@ -51,6 +51,7 @@ private:
 	TextureManager Tmanager;
 	UserInput Ui;
 	GUI* Panel;
+	StringParser* Parser;
 	//process queues
 	PCBQueue* Ready;
 	PCBQueue* Blocked;

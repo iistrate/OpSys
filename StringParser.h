@@ -4,7 +4,6 @@
 #include <string>
 #include <Python.h>
 #include <vector>
-#include <string>
 
 #include <iostream>
 
