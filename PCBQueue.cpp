@@ -95,6 +95,24 @@ PCB* PCBQueue::findPCB(std::string name) {
 	}
 }
 
+void PCBQueue::removePCB(PCB* pcb) {
+	//find node containing pcb then remove it from list, and destroy the pcb
+	//navigator node
+	PCBNode* navigator = 0;
+	//point it to head
+	navigator = m_head;
+	while (navigator != 0) {
+		navigator = navigator->next;
+		//if pcb name is the same we have found our node
+		if (navigator->Pcb->getName() == pcb->getName()) {
+			//link the prev to the next
+			navigator->prev = navigator->next;
+			//once node unlinked; destroy pcb and decrement size count
+			--m_iPCBcount;
+		}
+	}
+}
+
 //return PCB count
 int PCBQueue::getPCBCount(){
 	return m_iPCBcount;

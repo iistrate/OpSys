@@ -30,12 +30,12 @@ public:
 	void freePCB(PCB*);
 	//setup PCB
 	PCB* setupPCB(std::string name, int priority, int classType);
-	//find PCB
-
+	//insert pcb at end
 	void insertPCB(PCB* pcb);
-
+	//find pcb by name
 	PCB* findPCB(std::string name);
-
+	//remove pcb
+	void removePCB(PCB* pcb);
 	//count pcbs in queue
 	int getPCBCount();
 	//get type of queue
