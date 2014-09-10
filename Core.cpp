@@ -173,7 +173,7 @@ void Core::run() {
 			std::cout << "name from setupPCB " << Ready->setupPCB("name", 120, APPLICATION)->getName();
 			//testing insertion and finding
 			Ready->insertPCB(Ready->setupPCB("my first pcb", 120, APPLICATION));
-			Ready->removePCB(Ready->findPCB("my first pcb"));
+//			Ready->removePCB(Ready->findPCB("my first pcb"));
 			std::cout << "Node size is: " << Ready->getPCBCount() << std::endl;
 			std::cout << "Find pcb by name; getting priority: " << Ready->findPCB("my first pcb")->getPriority() << std::endl;
 		}
