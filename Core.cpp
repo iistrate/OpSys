@@ -32,6 +32,7 @@ void Core::init(const char* title, int x, int y, int w, int h, int flags) {
 void Core::run() {
 	init("the E1 2000 Operating System", 50, 50, WINDOW::SCREEN_WIDTH, WINDOW::SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 	
+	//user input
 	int uinput;
 	
 	time_t tm;
@@ -48,6 +49,7 @@ void Core::run() {
 	Panel->getImages(m_Images_CMD);
 	std::string directory = listDir();
 
+	//cinitialize python parser
 	StringParser* Parser = new StringParser;
 	Parser->init();
 
@@ -177,9 +179,9 @@ void Core::run() {
 			std::cout << "name from setupPCB " << Ready->setupPCB("name", 120, APPLICATION)->getName();
 			//testing insertion and finding
 			Ready->insertPCB(Ready->setupPCB("my first pcb", 120, APPLICATION));
-//			Ready->removePCB(Ready->findPCB("my first pcb"));
+			Ready->removePCB(Ready->findPCB("my first pcb"));
 			std::cout << "Node size is: " << Ready->getPCBCount() << std::endl;
-			std::cout << "Find pcb by name; getting priority: " << Ready->findPCB("my first pcb")->getPriority() << std::endl;
+			std::cout << "Find pcb by name; getting priority: " << Ready->findPCB("my first pcb") << std::endl;
 		}
 
 

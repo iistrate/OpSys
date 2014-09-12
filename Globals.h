@@ -4,7 +4,7 @@
 #include <iostream>
 
 namespace Globals {
-	const int FPS_CAP = 10;
+	const int FPS_CAP = 90;
 	const int COMMAND_PANEL_LINE_WRAP = 200;
 }
 
@@ -34,6 +34,20 @@ enum PCBi {
 	PROCESS_STATE_BLOCKED,
 	PROCESS_STATE_SUSPENDED,
 	PROCESS_STATE_NOT_SUSPENDED
+};
+
+enum Commands {
+	CREATE_PCB = 1,
+	DELETE_PCB,
+	BLOCK,
+	UNBLOCK,
+	SUSPEND,
+	RESUME,
+	SET_PRIORITY,
+	SHOW_PCB,
+	SHOW_ALL,
+	SHOW_READY,
+	SHOW_BLOCKED
 };
 
 #endif

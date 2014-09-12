@@ -1,7 +1,6 @@
 #include "PCB.h"
 
 PCB::PCB(): m_ipriority(0), m_iprocessClass(0), m_iprocessState(0) {
-
 }
 PCB::~PCB() {
 }

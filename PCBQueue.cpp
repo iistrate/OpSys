@@ -4,6 +4,8 @@
 PCBQueue::PCBQueue(bool state) : m_iPCBcount(0), m_bstate(state) {
 	m_head = new PCBNode;
 	m_tail = new PCBNode;
+	m_head->Pcb = 0;
+	m_tail->Pcb = 0;
 }
 
 //allocate PCB
@@ -87,30 +89,37 @@ PCB* PCBQueue::findPCB(std::string name) {
 	navigator = m_head;
 	//traverse nodes
 	while (navigator != 0) {
-		navigator = navigator->next;
-		if (navigator->Pcb->getName() == name) {
-			return navigator->Pcb;
-			std::cout << navigator->Pcb->getName() << std::endl;
+		if (navigator->Pcb != 0) {
+			if (navigator->Pcb->getName() == name) {
+				return navigator->Pcb;
+				std::cout << navigator->Pcb->getName() << std::endl;
+			}
 		}
+		navigator = navigator->next;
 	}
+	return 0;
 }
 
 void PCBQueue::removePCB(PCB* pcb) {
 	//find node containing pcb then remove it from list, and destroy the pcb
-	//navigator node
-	PCBNode* navigator = 0;
-	//point it to head
+	PCBNode* navigator = new PCBNode;
 	navigator = m_head;
-	while (navigator != 0) {
-		navigator = navigator->next;
-		//if pcb name is the same we have found our node
-		if (navigator->Pcb->getName() == pcb->getName()) {
-			//link the prev to the next
-			navigator->prev = navigator->next;
-			//once node unlinked; destroy pcb and decrement size count
-			--m_iPCBcount;
+	do {
+		if (navigator->Pcb != 0) {
+			if (navigator->Pcb->getName() == pcb->getName()) {
+				if (navigator->prev != 0 && navigator->next != 0) {
+					//connect previous to next, remove current 
+					navigator->prev->next = navigator->next;
+					navigator->next->prev = navigator->prev;
+					//				delete navigator->Pcb;
+					//				delete navigator;
+					m_iPCBcount--;
+					break;
+				}
+			}
 		}
-	}
+		navigator = navigator->next;
+	} while (navigator != 0);
 }
 
 //return PCB count

@@ -46,36 +46,31 @@ def stringToCommand(string):
     #holds int commands
     commands = list()
     #debug mode
-    #print(sarray)
+    print(sarray)
     #check each word for valid commands
     for key, word in enumerate(sarray):
-        if (word.lower() == "left"):
-            commands.append(4)
-        elif (word.lower() == "right"):
-            commands.append(2)
-        elif (word.lower() == "up"):
+        if (word.lower() == "CreatePCB".lower()):
             commands.append(1)
-        elif (word.lower() == "down"):
+        elif (word.lower() == "DeletePCB".lower()):
+            commands.append(2)
+        elif (word.lower() == "Block".lower()):
             commands.append(3)
-        #if repeat
-        elif (word.lower() == "repeat"):
-            #if using repeat inline
-            if (len(sarray) > key+2):
-                #break off array at the repeat
-                tempArr = sarray[key+2:]
-                repeat = int(sarray[key+1]) - 1 # -1 is added to account for the original left/right/up/down command
-                command = sarray[key+2]
-                intCommand = 0
-                if (command.lower() == "left"):
-                    intCommand = 4
-                elif (command.lower() == "right"):
-                    intCommand = 2
-                elif (command.lower() == "up"):
-                    intCommand = 1
-                elif (command.lower() == "down"):
-                    intCommand = 3
-                while repeat > 0:
-                    commands.append(intCommand)
-                    repeat -= 1
+        elif (word.lower() == "Unblock".lower()):
+            commands.append(4)
+        elif (word.lower() == "Suspend".lower()):
+            commands.append(5)
+        elif (word.lower() == "Resume".lower()):
+            commands.append(6)
+        elif (word.lower() == "Set priority".lower()):
+            commands.append(7)
+        elif (word.lower() == "Show PCB".lower()):
+            commands.append(8)
+        elif (word.lower() == "Show all".lower()):
+            commands.append(9)
+        elif (word.lower() == "Show ready".lower()):
+            commands.append(10)
+        elif (word.lower() == "Show blocked".lower()):
+            commands.append(11)
     #return commands as a list
+    print(commands)
     return commands
