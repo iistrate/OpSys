@@ -46,7 +46,7 @@ def stringToCommand(string):
     #holds int commands
     commands = list()
     #debug mode
-    print(sarray)
+    #print(sarray)
     #check each word for valid commands
     for key, word in enumerate(sarray):
         if (word.lower() == "CreatePCB".lower()):
@@ -72,5 +72,5 @@ def stringToCommand(string):
         elif (word.lower() == "Show blocked".lower()):
             commands.append(11)
     #return commands as a list
-    print(commands)
+    #print(commands)
     return commands

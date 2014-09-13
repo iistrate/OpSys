@@ -7,17 +7,16 @@
 class PCB {
 private:
 	//process name
-	std::string m_sname;
+	std::string m_name;
 	//process class system or app
-	int m_iprocessClass;
+	int m_processClass;
 	//process priority
-	int m_ipriority;
+	int m_priority;
 	//process state
-	int m_iprocessState;
+	int m_processState;
 
 public:
 	PCB();
-	~PCB();
 	//sets name
 	void setName(std::string name);
 	//sets class app or system type

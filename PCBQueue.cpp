@@ -1,9 +1,7 @@
 #include "PCBQueue.h"
 
 //set state of PCB
-PCBQueue::PCBQueue(bool state) : m_iPCBcount(0), m_bstate(state) {
-	m_phead = m_ptail = 0;
-}
+PCBQueue::PCBQueue(bool state) : m_PCBcount(0), m_state(state), m_head(0), m_tail(0) {}
 
 //allocate PCB
 PCB* PCBQueue::allocatePCB() {
@@ -45,73 +43,89 @@ PCB* PCBQueue::setupPCB(std::string name, int priority, int classType) {
 }
 void PCBQueue::insertPCBatEnd(PCB* pcb) {
 	//node to be inserted
-	PCBNode* newNode = new PCBNode;
-	//if there's no PCB's
-	if (m_iPCBcount == 0) {
-		//assign passed pcb to node
-		newNode->setPCB(pcb);
+	PCBNode* newNode = new PCBNode(pcb);
+	//if there's no PCB's allocate node to head
+	if (m_PCBcount == 0) {
 		//link frontend
-		m_phead->setNext(newNode);
-		m_phead->setPrev(0);
+		m_head = newNode;
 		//integrate in list
-		newNode->setNext(m_ptail);
-		//link backend
-		m_ptail->setNext(0);
-		m_ptail->setPrev(newNode);
+		m_head->setNext(m_tail);
+	}
+	//if theres one PCB link tail
+	else if (m_PCBcount == 1) {
+		//link end
+		m_tail = newNode;
+		m_tail->setPrev(m_head);
+		m_head->setNext(m_tail);
 	}
 	//if there's PCB's in queue then navigate nodes to find the last one; pretty much just get the prev from last
 	else {
-		//we know the last node is m_ptail; we want the prev from it
-		//assign passed pcb to node
-		newNode->setPCB(pcb);
-		//integrate in list
-		//link newNode to tail
-		newNode->setNext(m_ptail);
+		PCBNode* tmp;
+		//store tail in tmp
+		tmp = m_tail;
+		//make newNode as my last link
+		m_tail = newNode;
 		//get last pcb node from tail and link it to new node
-		m_ptail->getPrev()->setNext(newNode);
+		tmp->getPrev()->setNext(m_tail);
 		//link tail to new node 
-		m_ptail->setPrev(newNode);
+		m_tail->setPrev(tmp->getPrev());
 	}
 	//increase PCB count
-	m_iPCBcount++;
+	m_PCBcount++;
 }
 PCB* PCBQueue::findPCB(std::string name) {
-	//create node navigator
-	PCBNode* navigator = 0;
-	//link navigator to start of list
-	navigator = m_phead;
+	//create node navigator, link navigator to start of list
+	PCBNode* navigator = m_head;
 	//traverse nodes
-	while (navigator != 0) {
+	do {
 		if (navigator->getPCB() != 0) {
 			if (navigator->getPCB()->getName() == name) {
 				return navigator->getPCB();
-				std::cout << navigator->getPCB()->getName() << std::endl;
 			}
 		}
 		navigator = navigator->getNext();
 	}
+	while (navigator != 0);
 	return 0;
 }
 
 void PCBQueue::removePCB(PCB* pcb) {
 	//find node containing pcb then remove it from list, and destroy the pcb
-	PCBNode* navigator = 0;
-	navigator = m_phead;
+	PCBNode* navigator = m_head;
+	bool unlinked = false;
 	do {
 		if (navigator->getPCB() != 0) {
 			if (navigator->getPCB()->getName() == pcb->getName()) {
-				if (navigator->getPrev() != 0 && navigator->getNext() != 0) {
-					//connect previous to next, remove current 
+				//if start node
+				if (navigator == m_head) {
+					if (m_PCBcount > 1) {
+						m_head = m_head->getNext();
+						m_head->setPrev(0);
+					}
+					//if it's just head delete; no unlinking needed
+					unlinked = true;
+				}
+				//if end node
+				else if (navigator == m_tail) {
+					m_tail = m_tail->getPrev();
+					m_tail->setNext(0);
+					unlinked = true;
+				}
+				//if any other node
+				else {
 					navigator->getPrev()->setNext(navigator->getNext());
 					navigator->getNext()->setPrev(navigator->getPrev());
-					//deallocate memory
-					delete navigator->getPCB();
-					delete navigator;
-					//decrease count
-					m_iPCBcount--;
-					break;
+					unlinked = true;
 				}
 			}
+		}
+		if (unlinked) {
+			//deallocate memory
+			delete navigator;
+			//decrease count
+			m_PCBcount--;
+			//with navigator deleted can't go to next line so just break
+			break;
 		}
 		navigator = navigator->getNext();
 	} while (navigator != 0);
@@ -119,9 +133,9 @@ void PCBQueue::removePCB(PCB* pcb) {
 
 //return PCB count
 int PCBQueue::getPCBCount(){
-	return m_iPCBcount;
+	return m_PCBcount;
 }
 //return Queue state ready or blocked
 bool PCBQueue::getState() {
-	return m_bstate;
+	return m_state;
 }

@@ -6,13 +6,13 @@
 
 class PCBQueue {
 private:
-	PCBNode* m_phead;
-	PCBNode* m_ptail;
+	PCBNode* m_head;
+	PCBNode* m_tail;
 
 	//count of PCB's
-	int m_iPCBcount;
+	int m_PCBcount;
 	//ready or blocked
-	bool m_bstate;
+	bool m_state;
 
 public:
 	PCBQueue(bool state);

@@ -54,6 +54,16 @@ void Core::run() {
 	Parser->init();
 
 	Ready->insertPCBatEnd(Ready->setupPCB("my first pcb", 120, APPLICATION));
+	Ready->insertPCBatEnd(Ready->setupPCB("my first pcb", 120, APPLICATION));
+	Ready->insertPCBatEnd(Ready->setupPCB("my first pcb", 120, APPLICATION));
+	Ready->insertPCBatEnd(Ready->setupPCB("my second pcb", 130, SYSTEM_TYPE));
+	//Ready->insertPCBatEnd(Ready->setupPCB("my second pcb2", 130, SYSTEM_TYPE));
+	PCB* pcb = Ready->findPCB("my second pcb");
+	if (pcb != 0) {
+		std::cout << pcb->getName();
+		Ready->removePCB(pcb);
+	}
+	std::cout << Ready->getPCBCount();
 
 	do {
 		//events

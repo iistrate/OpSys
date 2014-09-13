@@ -1,32 +1,45 @@
+#ifndef PCBNODE_H
+#define PCBNODE_H
+
 #include "PCB.h"
 
 class PCBNode {
 	friend class PCBQueue;
 private:
-	PCBNode* m_pnext;
-	PCBNode* m_pprev;
-	PCB* m_pPcb;
+	PCBNode* m_next;
+	PCBNode* m_prev;
+	PCB* m_Pcb;
 public:
-	PCBNode(void) : m_pnext(NULL), m_pprev(NULL), m_pPcb(NULL) {}
+	//empty node
+	PCBNode(void) : m_next(NULL), m_prev(NULL), m_Pcb(NULL) {}
+	//node with pcb
+	PCBNode(PCB* pcb) : m_next(NULL), m_prev(NULL), m_Pcb(pcb) {}
+
+	//when node is deleted get rid of pcb
+	~PCBNode() {
+		delete m_Pcb;
+	}
 
 	//get value
 	PCB* getPCB(void) {
-		return m_pPcb;
+		return m_Pcb;
 	}
 	PCBNode* getNext(void) {
-		return m_pnext;
+		return m_next;
 	}
 	PCBNode* getPrev(void) {
-		return m_pprev;
+		return m_prev;
 	}
 	//set value
 	void setPCB(PCB* pcb) {
-		m_pPcb = pcb;
+		m_Pcb = pcb;
 	}
 	void setNext(PCBNode* next) {
-		m_pnext = next;
+		m_next = next;
 	}
 	void setPrev(PCBNode* prev) {
-		m_pprev = prev;
+		m_prev = prev;
 	}
 };
+
+#endif

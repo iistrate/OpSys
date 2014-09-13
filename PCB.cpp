@@ -1,33 +1,31 @@
 #include "PCB.h"
 
-PCB::PCB(): m_ipriority(0), m_iprocessClass(0), m_iprocessState(0) {
-}
-PCB::~PCB() {
+PCB::PCB(): m_priority(0), m_processClass(0), m_processState(0), m_name("empty") {
 }
 
 
 void PCB::setName(std::string name) {
-	m_sname = name;
+	m_name = name;
 }
 void PCB::setClass(int pclass) {
-	m_iprocessClass = pclass;
+	m_processClass = pclass;
 }
 void PCB::setPriority(int priority) {
-	m_ipriority = priority;
+	m_priority = priority;
 }
 void PCB::setState(int state) {
-	m_iprocessState = state;
+	m_processState = state;
 }
 
 std::string PCB::getName() {
-	return m_sname;
+	return m_name;
 }
 int PCB::getClass() {
-	return m_iprocessClass;
+	return m_processClass;
 }
 int PCB::getPriority() {
-	return m_ipriority;
+	return m_priority;
 }
 int PCB::getState() {
-	return m_iprocessState;
+	return m_processState;
 }
