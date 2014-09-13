@@ -87,6 +87,7 @@
     <ClInclude Include="GUI.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="PCB.h" />
+    <ClInclude Include="PCBNode.h" />
     <ClInclude Include="PCBQueue.h" />
     <ClInclude Include="StringParser.h" />
     <ClInclude Include="TextureManager.h" />
