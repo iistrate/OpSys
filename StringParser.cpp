@@ -14,7 +14,7 @@ void StringParser::init() {
 	m_gstate = PyGILState_Ensure();
 
 	//module name
-	const char module[] = "Parser";
+	const char module[] = "Python";
 
 	//build c string to py object string
 	m_POname = Py_BuildValue("s", module);

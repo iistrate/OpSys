@@ -1,6 +1,11 @@
 import sqlite3
+import os
 
 print("Module loaded; activating Python super powers in 3 2 1..")
+
+def listDir():
+    dirs = '\n '.join(os.listdir())
+    return dirs
 
 def parse(string):
     #clean string starts empty
