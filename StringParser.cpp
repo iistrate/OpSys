@@ -23,7 +23,7 @@ void StringParser::init() {
 	Py_DecRef(m_POname);
 }
 
-std::string StringParser::parseString(std::vector < int > &f_icommands, std::string s_command) {
+std::string StringParser::parseString(std::vector < int > &f_icommands, std::string s_command, std::vector < char* > &params) {
 	//from string to c string
 	const char* cstring = s_command.c_str();
 	//if python interpreter is initialized
@@ -41,11 +41,15 @@ std::string StringParser::parseString(std::vector < int > &f_icommands, std::str
 		if (m_POvalues) {
 			//first item is a string
 			m_POstring = PyTuple_GetItem(m_POvalues, 0);
-			//second item is a list
+			//second item is a list of ints and params
 			m_POlist = PyTuple_GetItem(m_POvalues, 1);
+			//get ints
+			m_POints = PyTuple_GetItem(m_POlist, 0);
+			//get params
+			m_POparams = PyTuple_GetItem(m_POlist, 1);
 			//empty out commands
 			f_icommands.clear();
-			int len = PyList_Size(m_POlist);
+			int len = PyList_Size(m_POints);
 			for (int i = 0; i < len; i++) {
 				//add command
 				f_icommands.push_back(PyLong_AsLong(PyList_GetItem(m_POlist, i)));

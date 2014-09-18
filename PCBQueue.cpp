@@ -121,7 +121,6 @@ void PCBQueue::removePCB(PCB* pcb) {
 		}
 		if (unlinked) {
 			//deallocate memory
-			delete navigator;
 			//decrease count
 			m_PCBcount--;
 			//with navigator deleted can't go to next line so just break

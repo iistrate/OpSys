@@ -17,7 +17,6 @@ private:
 	//setup vars
 	int m_turn;
 	int m_commandCursor;
-	std::vector < int > m_icommands;
 
 	//SDL vars
 	SDL_Window* m_pWindow;
@@ -42,10 +41,12 @@ private:
 	Uint32 m_fps;
 	Uint32 m_fpsCap;
 
-	//holds string command
+	//holds visual string command for sdl
 	std::string m_scommand;
 	//holds translated commands
 	std::vector < int > m_icommand;
+	//holds parameter commands
+	std::vector < char * > m_parameters;
 
 	//composition
 	TextureManager Tmanager;

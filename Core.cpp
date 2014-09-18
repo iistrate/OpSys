@@ -72,10 +72,40 @@ void Core::run() {
 		//get command from input
 		m_scommand = Ui.getStringCommand();
 		//send string to python and get sanitized string and list of commands as a vector of ints
-		m_scommand = Parser->parseString(m_icommand, m_scommand);
+		m_scommand = Parser->parseString(m_icommand, m_scommand, m_parameters);
 		Ui.setStringCommand(m_scommand);
 
-
+		//user written commands
+		if (m_icommand.size() > 0) {
+			//switch on first element
+			switch (m_icommand.front()) {
+			case Commands::CREATE_PCB:
+				std::cout << m_scommand << std::endl;
+				break;
+			case Commands::DELETE_PCB:
+				break;
+			case Commands::BLOCK:
+				break;
+			case Commands::UNBLOCK:
+				break;
+			case Commands::SUSPEND:
+				break;
+			case Commands::RESUME:
+				break;
+			case Commands::SET_PRIORITY:
+				break;
+			case Commands::SHOW_PCB:
+				break;
+			case Commands::SHOW_ALL:
+				break;
+			case Commands::SHOW_READY:
+				break;
+			case Commands::SHOW_BLOCKED:
+				break;
+			}
+		}
+		
+		//user predefined keys and visual buttons input
 		switch (uinput) {
 			case CONTROLS::QUIT:
 				quit();

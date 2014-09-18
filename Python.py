@@ -32,7 +32,7 @@ def parse(string):
         #string list cleaned, implode list to string and append it to return list
         cleanedString = ''.join(sarray)
     
-    #string is at index 0; command list at index 1
+    #string is at index 0; command list at index 1 0; params at index 1 1
     sarray = (cleanedString, stringToCommand(cleanedString))
     #debug mode
     #print(sarray)
@@ -50,8 +50,10 @@ def stringToCommand(string):
     sarray = string.split(" ")
     #holds int commands
     commands = list()
+    #holds parameters
+    params = list()
     #debug mode
-    #print(sarray)
+    print(sarray)
     #check each word for valid commands
     for key, word in enumerate(sarray):
         if (word.lower() == "CreatePCB".lower()):
@@ -78,4 +80,4 @@ def stringToCommand(string):
             commands.append(11)
     #return commands as a list
     #print(commands)
-    return commands
+    return (commands, params)
