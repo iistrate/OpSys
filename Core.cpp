@@ -80,7 +80,9 @@ void Core::run() {
 			//switch on first element
 			switch (m_icommand.front()) {
 			case Commands::CREATE_PCB:
-				std::cout << m_scommand << std::endl;
+				for (int i = 0; i < m_parameters.size(); i++) {
+					std::cout << m_parameters[i] << " ";
+				}
 				break;
 			case Commands::DELETE_PCB:
 				break;

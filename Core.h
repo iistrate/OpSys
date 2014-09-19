@@ -46,7 +46,7 @@ private:
 	//holds translated commands
 	std::vector < int > m_icommand;
 	//holds parameter commands
-	std::vector < char * > m_parameters;
+	std::vector < std::string > m_parameters;
 
 	//composition
 	TextureManager Tmanager;
