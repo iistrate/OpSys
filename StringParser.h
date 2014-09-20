@@ -27,7 +27,7 @@ public:
 	
 	//sanitize string before sending it to being drawn and if it is the case 
 	//get commands from string
-	std::string parseString(std::vector < int > &f_icommands, std::string s_command, std::vector < std::string > params);
+	std::string parseString(std::vector < int > &f_icommands, std::string s_command, std::vector < std::string > &params);
 };
 
 #endif

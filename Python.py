@@ -57,13 +57,17 @@ def stringToCommand(string):
     #check each word for valid commands
     for key, word in enumerate(sarray):
         if (word.lower() == "CreatePCB".lower()):
-            if len(sarray) == 4:
-                #append process name
-                params.append(key+1);
-                #append process class
-                params.append(key+2);
-                #append process priority
-                params.append(key+3);
+            #command + 3 parameters
+            if len(sarray) >= 4:
+                if (len(sarray[key+1])):
+                    #append process name
+                    params.append(sarray[key+1]);
+                if (len(sarray[key+2])):
+                    #append process class
+                    params.append(sarray[key+2]);
+                if (len(sarray[key+3])):
+                    #append process priority
+                    params.append(sarray[key+3]);
             commands.append(1)
         elif (word.lower() == "DeletePCB".lower()):
             commands.append(2)

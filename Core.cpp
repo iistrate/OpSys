@@ -80,8 +80,12 @@ void Core::run() {
 			//switch on first element
 			switch (m_icommand.front()) {
 			case Commands::CREATE_PCB:
-				for (int i = 0; i < m_parameters.size(); i++) {
-					std::cout << m_parameters[i] << " ";
+				if (m_parameters.size() == 3) {
+					Ready->insertPCBatEnd(Ready->setupPCB(m_parameters[0], atoi(m_parameters[1].c_str()), atoi(m_parameters[2].c_str())));
+					//once were done with them dismiss 
+					m_scommand.clear();
+					m_parameters.clear();
+					Ui.setStringCommand(m_scommand);
 				}
 				break;
 			case Commands::DELETE_PCB:
