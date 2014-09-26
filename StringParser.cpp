@@ -49,6 +49,7 @@ std::string StringParser::parseString(std::vector < int > &f_icommands, std::str
 			m_POparams = PyTuple_GetItem(m_POlist, 1);
 			//empty out commands
 			f_icommands.clear();
+			params.clear();
 			int len = PyList_Size(m_POints);
 			for (int i = 0; i < len; i++) {
 				//add command

@@ -53,17 +53,17 @@ void Core::run() {
 	StringParser* Parser = new StringParser;
 	Parser->init();
 
-	Ready->insertPCBatEnd(Ready->setupPCB("my first pcb", 120, APPLICATION));
-	Ready->insertPCBatEnd(Ready->setupPCB("my first pcb", 120, APPLICATION));
-	Ready->insertPCBatEnd(Ready->setupPCB("my first pcb", 120, APPLICATION));
-	Ready->insertPCBatEnd(Ready->setupPCB("my second pcb", 130, SYSTEM_TYPE));
-	//Ready->insertPCBatEnd(Ready->setupPCB("my second pcb2", 130, SYSTEM_TYPE));
-	PCB* pcb = Ready->findPCB("my second pcb");
-	if (pcb != 0) {
-		std::cout << pcb->getName();
-		Ready->removePCB(pcb);
-	}
-	std::cout << Ready->getPCBCount();
+	//Ready->insertPCBatEnd(Ready->setupPCB("my first pcb", 120, APPLICATION));
+	//Ready->insertPCBatEnd(Ready->setupPCB("my first pcb", 120, APPLICATION));
+	//Ready->insertPCBatEnd(Ready->setupPCB("my first pcb", 120, APPLICATION));
+	//Ready->insertPCBatEnd(Ready->setupPCB("my second pcb", 130, SYSTEM_TYPE));
+	////Ready->insertPCBatEnd(Ready->setupPCB("my second pcb2", 130, SYSTEM_TYPE));
+	//PCB* pcb = Ready->findPCB("my second pcb");
+	//if (pcb != 0) {
+	//	std::cout << pcb->getName();
+	//	Ready->removePCB(pcb);
+	//}
+	//std::cout << Ready->getPCBCount();
 
 	do {
 		//events
@@ -80,6 +80,7 @@ void Core::run() {
 			//switch on first element
 			switch (m_icommand.front()) {
 			case Commands::CREATE_PCB:
+				std::cout << m_parameters.size() << std::endl;
 				if (m_parameters.size() == 3) {
 					Ready->insertPCBatEnd(Ready->setupPCB(m_parameters[0], atoi(m_parameters[1].c_str()), atoi(m_parameters[2].c_str())));
 					//once were done with them dismiss 
@@ -110,7 +111,7 @@ void Core::run() {
 				break;
 			}
 		}
-		
+		std::cout << "There are " << Ready->getPCBCount() << " pcb's in the Ready queue" << std::endl;
 		//user predefined keys and visual buttons input
 		switch (uinput) {
 			case CONTROLS::QUIT:
