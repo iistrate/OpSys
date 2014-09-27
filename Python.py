@@ -39,26 +39,30 @@ def parse(string):
     return sarray
 
 def stringToCommand(string):
+    #execute script if string contains
+    executeScript = string.find("\n")
     #sanitize string
     found = 0
     while (found != -1):
         found = string.find("\n")
         #add whitespace before and after char for splitting
         string = string.replace("\n", " /n ")
-
     #split string into words
     sarray = string.split(" ")
     #holds int commands
     commands = list()
     #holds parameters
     params = list()
+    #holds error codes
+    errors = list()
     #debug mode
     print(sarray)
+
     #check each word for valid commands
     for key, word in enumerate(sarray):
-        if (word.lower() == "CreatePCB".lower()):
-            #command + 3 parameters
-            if len(sarray) == 4 and ";" in sarray[key+3]:
+        if executeScript != -1:
+            if (word.lower() == "CreatePCB".lower()):
+                #command + 3 parameters and execute command
                 if (sarray[key+1]):
                     #append process name
                     params.append(sarray[key+1]);
@@ -68,27 +72,27 @@ def stringToCommand(string):
                 if (sarray[key+3]):
                     #append process priority
                     params.append(sarray[key+3]);
-            commands.append(1)
-        elif (word.lower() == "DeletePCB".lower()):
-            commands.append(2)
-        elif (word.lower() == "Block".lower()):
-            commands.append(3)
-        elif (word.lower() == "Unblock".lower()):
-            commands.append(4)
-        elif (word.lower() == "Suspend".lower()):
-            commands.append(5)
-        elif (word.lower() == "Resume".lower()):
-            commands.append(6)
-        elif (word.lower() == "Set priority".lower()):
-            commands.append(7)
-        elif (word.lower() == "Show PCB".lower()):
-            commands.append(8)
-        elif (word.lower() == "Show all".lower()):
-            commands.append(9)
-        elif (word.lower() == "Show ready".lower()):
-            commands.append(10)
-        elif (word.lower() == "Show blocked".lower()):
-            commands.append(11)
+                commands.append(1)
+            elif (word.lower() == "DeletePCB".lower()):
+                commands.append(2)
+            elif (word.lower() == "Block".lower()):
+                commands.append(3)
+            elif (word.lower() == "Unblock".lower()):
+                commands.append(4)
+            elif (word.lower() == "Suspend".lower()):
+                commands.append(5)
+            elif (word.lower() == "Resume".lower()):
+                commands.append(6)
+            elif (word.lower() == "Set priority".lower()):
+                commands.append(7)
+            elif (word.lower() == "Show PCB".lower()):
+                commands.append(8)
+            elif (word.lower() == "Show all".lower()):
+                commands.append(9)
+            elif (word.lower() == "Show ready".lower()):
+                commands.append(10)
+            elif (word.lower() == "Show blocked".lower()):
+                commands.append(11)
     #return commands as a list
     #print(commands)
-    return (commands, params)
+    return (commands, params, errors)

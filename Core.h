@@ -1,9 +1,11 @@
 #ifndef CORE_H
 #define CORE_H
 
+//libraries
 #include <ctime>
 #include <string>
-
+#include <cassert>
+//user defined headers
 #include "TextureManager.h"
 #include "Globals.h"
 #include "UserInput.h"
@@ -47,6 +49,8 @@ private:
 	std::vector < int > m_icommand;
 	//holds parameter commands
 	std::vector < std::string > m_parameters;
+	//hold error codes
+	std::vector < int > m_errorCodes;
 
 	//composition
 	TextureManager Tmanager;
@@ -60,6 +64,10 @@ private:
 	//image sets
 	std::vector < Image* > m_Images;
 	std::vector < Image* > m_Images_CMD;
+
+	enum ErrorCodes {
+		INVALID_SYNTAX,
+	};
 
 public:
 	Core();

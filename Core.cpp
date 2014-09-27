@@ -72,47 +72,48 @@ void Core::run() {
 		//get command from input
 		m_scommand = Ui.getStringCommand();
 		//send string to python and get sanitized string and list of commands as a vector of ints
-		m_scommand = Parser->parseString(m_icommand, m_scommand, m_parameters);
+		m_scommand = Parser->parseString(m_icommand, m_scommand, m_parameters, m_errorCodes);
 		Ui.setStringCommand(m_scommand);
-
-		//user written commands
-		if (m_icommand.size() > 0) {
-			//switch on first element
-			switch (m_icommand.front()) {
-			case Commands::CREATE_PCB:
-				std::cout << m_parameters.size() << std::endl;
-				if (m_parameters.size() == 3) {
-					Ready->insertPCBatEnd(Ready->setupPCB(m_parameters[0], atoi(m_parameters[1].c_str()), atoi(m_parameters[2].c_str())));
-					//once were done with them dismiss 
-					m_scommand.clear();
-					m_parameters.clear();
-					Ui.setStringCommand(m_scommand);
-				}
-				break;
-			case Commands::DELETE_PCB:
-				break;
-			case Commands::BLOCK:
-				break;
-			case Commands::UNBLOCK:
-				break;
-			case Commands::SUSPEND:
-				break;
-			case Commands::RESUME:
-				break;
-			case Commands::SET_PRIORITY:
-				break;
-			case Commands::SHOW_PCB:
-				break;
-			case Commands::SHOW_ALL:
-				break;
-			case Commands::SHOW_READY:
-				break;
-			case Commands::SHOW_BLOCKED:
-				break;
-			}
-		}
-		std::cout << "There are " << Ready->getPCBCount() << " pcb's in the Ready queue" << std::endl;
+		if (m_errorCodes.size() == 0) {
+			//user written commands
+			if (m_icommand.size() > 0) {
+				//switch on first element
+				switch (m_icommand.front()) {
+				case Commands::CREATE_PCB:
+					std::cout << m_parameters.size() << std::endl;
+					if (m_parameters.size() == 3) {
+						Ready->insertPCBatEnd(Ready->setupPCB(m_parameters[0], atoi(m_parameters[1].c_str()), atoi(m_parameters[2].c_str())));
+						//once were done with them dismiss 
+						m_scommand.clear();
+						m_parameters.clear();
+						Ui.setStringCommand(m_scommand);
+					}
+					break;
+				case Commands::DELETE_PCB:
+					break;
+				case Commands::BLOCK:
+					break;
+				case Commands::UNBLOCK:
+					break;
+				case Commands::SUSPEND:
+					break;
+				case Commands::RESUME:
+					break;
+				case Commands::SET_PRIORITY:
+					break;
+				case Commands::SHOW_PCB:
+					break;
+				case Commands::SHOW_ALL:
+					break;
+				case Commands::SHOW_READY:
+					break;
+				case Commands::SHOW_BLOCKED:
+					break;
+				} //command switch
+			} //reading commands
+		} //erorr codes
 		//user predefined keys and visual buttons input
+		std::cout << Ready->getPCBCount() << std::endl;
 		switch (uinput) {
 			case CONTROLS::QUIT:
 				quit();

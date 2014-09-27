@@ -23,7 +23,8 @@ void StringParser::init() {
 	Py_DecRef(m_POname);
 }
 
-std::string StringParser::parseString(std::vector < int > &f_icommands, std::string s_command, std::vector < std::string > &params) {
+std::string StringParser::parseString(std::vector < int > &f_icommands, std::string s_command, 
+										std::vector < std::string > &params, std::vector < int > &errors) {
 	//from string to c string
 	const char* cstring = s_command.c_str();
 	//if python interpreter is initialized
@@ -47,19 +48,22 @@ std::string StringParser::parseString(std::vector < int > &f_icommands, std::str
 			m_POints = PyTuple_GetItem(m_POlist, 0);
 			//get params
 			m_POparams = PyTuple_GetItem(m_POlist, 1);
-			//empty out commands
+			//get errors
+			m_POerrors = PyTuple_GetItem(m_POlist, 2);
+			//empty out commands; params and error codes
 			f_icommands.clear();
 			params.clear();
+			errors.clear();
 			int len = PyList_Size(m_POints);
 			for (int i = 0; i < len; i++) {
 				//add command
 				f_icommands.push_back(PyLong_AsLong(PyList_GetItem(m_POints, i)));
 			}
 			//empty param list
-			len = PyList_Size(m_POparams);
+			len = PyList_Size(m_POerrors);
 			for (int i = 0; i < len; i++) {
 				//add param strings
-				params.push_back(PyUnicode_AsUTF8(PyList_GetItem(m_POparams, i)));
+				params.push_back(PyUnicode_AsUTF8(PyList_GetItem(m_POerrors, i)));
 			}
 		}
 	}
