@@ -64,14 +64,35 @@ def stringToCommand(string):
             if (word.lower() == "CreatePCB".lower()):
                 #command + 3 parameters and execute command
                 if (sarray[key+1]):
-                    #append process name
-                    params.append(sarray[key+1]);
+                    if (isinstance(sarray[key+1], str) and not sarray[key+1].isdigit()):
+                        #append process name
+                        params.append(sarray[key+1])
+                    else:
+                        #error code not a string
+                        errors.append(2)
                 if (sarray[key+2]):
-                    #append process class
-                    params.append(sarray[key+2]);
+                    if (sarray[key+2].isdigit()):
+                        #pcb class is either system or app (0 or 1)
+                        if (sarray[key+2] in (0,1)):
+                            #append process class
+                            params.append(sarray[key+2])
+                        else:
+                            #error code int range exceeded
+                            errors.append(4)
+                    else:
+                        #error code not an int
+                        errors.append(3)
                 if (sarray[key+3]):
-                    #append process priority
-                    params.append(sarray[key+3]);
+                    if (sarray[key+3].isdigit()):
+                        if (sarray[key+3] >= -127 and sarray[key+3] <= 127):
+                            #append process priority
+                            params.append(sarray[key+3])
+                        else:
+                            #error code int range exceeded
+                            errors.append(4)
+                    else:
+                        #error code not an int
+                        errors.append(3);
                 commands.append(1)
             elif (word.lower() == "DeletePCB".lower()):
                 if (sarray[key+1]):

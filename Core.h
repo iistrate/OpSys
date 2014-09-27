@@ -68,7 +68,10 @@ private:
 	std::vector < Image* > m_Images_TM;
 
 	enum ErrorCodes {
-		INVALID_SYNTAX,
+		INVALID_SYNTAX = 1,
+		OBJ_NOT_A_STRING,
+		OBJ_NOT_AN_INT,
+		INT_OUT_OF_RANGE
 	};
 
 public:
