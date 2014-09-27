@@ -25,15 +25,16 @@ private:
 	SDL_Renderer* m_pRenderer;
 
 	//switches
-	bool m_bdebugMode;
-	bool m_bexecute;
-	bool m_brunning;
-	bool m_bcameraMode;
-	bool m_bshowcPanel;
-	bool m_bshowVersion;
-	bool m_bshowDate;
-	bool m_bshowHelp;
-	bool m_bshowDir;
+	bool m_debugMode;
+	bool m_execute;
+	bool m_running;
+	bool m_cameraMode;
+	bool m_showcPanel;
+	bool m_showVersion;
+	bool m_showDate;
+	bool m_showHelp;
+	bool m_showDir;
+	bool m_showTM;
 
 	bool m_bcreatedPanel;
 
@@ -64,6 +65,7 @@ private:
 	//image sets
 	std::vector < Image* > m_Images;
 	std::vector < Image* > m_Images_CMD;
+	std::vector < Image* > m_Images_TM;
 
 	enum ErrorCodes {
 		INVALID_SYNTAX,

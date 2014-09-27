@@ -62,8 +62,14 @@ std::string StringParser::parseString(std::vector < int > &f_icommands, std::str
 			//empty param list
 			len = PyList_Size(m_POerrors);
 			for (int i = 0; i < len; i++) {
+				//add error codes
+				errors.push_back(PyLong_AsLong(PyList_GetItem(m_POerrors, i)));
+			}
+			//empty param list
+			len = PyList_Size(m_POparams);
+			for (int i = 0; i < len; i++) {
 				//add param strings
-				params.push_back(PyUnicode_AsUTF8(PyList_GetItem(m_POerrors, i)));
+				params.push_back(PyUnicode_AsUTF8(PyList_GetItem(m_POparams, i)));
 			}
 		}
 	}

@@ -77,7 +77,7 @@ PCB* PCBQueue::findPCB(std::string name) {
 	//create node navigator, link navigator to start of list
 	PCBNode* navigator = m_head;
 	//traverse nodes
-	do {
+	while (navigator != 0) {	
 		if (navigator->getPCB() != 0) {
 			if (navigator->getPCB()->getName() == name) {
 				return navigator->getPCB();
@@ -85,7 +85,6 @@ PCB* PCBQueue::findPCB(std::string name) {
 		}
 		navigator = navigator->getNext();
 	}
-	while (navigator != 0);
 	return 0;
 }
 

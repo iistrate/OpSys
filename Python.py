@@ -74,6 +74,9 @@ def stringToCommand(string):
                     params.append(sarray[key+3]);
                 commands.append(1)
             elif (word.lower() == "DeletePCB".lower()):
+                if (sarray[key+1]):
+                    #append process name to be deleted
+                    params.append(sarray[key+1])
                 commands.append(2)
             elif (word.lower() == "Block".lower()):
                 commands.append(3)

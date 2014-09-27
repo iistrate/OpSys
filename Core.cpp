@@ -1,13 +1,14 @@
 #include "Core.h"
 
-Core::Core() :m_brunning(false), m_pRenderer(0), m_pWindow(0), m_fps(0), 
-m_fpsCap(Globals::FPS_CAP), m_turn(0), m_bdebugMode(false), m_bcameraMode(false), m_bexecute(false),
-m_commandCursor(0), m_bshowcPanel(false), m_bcreatedPanel(false), m_bshowDate(false), m_bshowHelp(false), m_bshowVersion(false) {
+Core::Core() :m_running(false), m_pRenderer(0), m_pWindow(0), m_fps(0), 
+m_fpsCap(Globals::FPS_CAP), m_turn(0), m_debugMode(false), m_cameraMode(false), m_execute(false),
+m_commandCursor(0), m_showcPanel(false), m_bcreatedPanel(false), m_showDate(false), m_showHelp(false), 
+m_showVersion(false), m_showTM(false) {
 }
 
 void Core::init(const char* title, int x, int y, int w, int h, int flags) {
 	//start loop
-	m_brunning = true;
+	m_running = true;
 
 	//initialize sdl
 	if (SDL_Init(SDL_INIT_EVERYTHING) >= 0) {
@@ -35,8 +36,13 @@ void Core::run() {
 	//user input
 	int uinput;
 	
+	//time 
 	time_t tm;
 	std::string stime;
+	//directory listing
+	std::string directory = listDir();
+
+
 
 	//create process queues
 	Ready = new PCBQueue(true);
@@ -45,25 +51,16 @@ void Core::run() {
 
 	//create panel
 	GUI* Panel = new GUI(300, 400, 500, 300);
-	//get images
+	GUI* TaskManager = new GUI(300, 400, 0, 0);
+	//get images for panels
+	//command panel
 	Panel->getImages(m_Images_CMD);
-	std::string directory = listDir();
+	//task manager
+	TaskManager->getImages(m_Images_TM);
 
-	//cinitialize python parser
+	//initialize python parser
 	StringParser* Parser = new StringParser;
 	Parser->init();
-
-	//Ready->insertPCBatEnd(Ready->setupPCB("my first pcb", 120, APPLICATION));
-	//Ready->insertPCBatEnd(Ready->setupPCB("my first pcb", 120, APPLICATION));
-	//Ready->insertPCBatEnd(Ready->setupPCB("my first pcb", 120, APPLICATION));
-	//Ready->insertPCBatEnd(Ready->setupPCB("my second pcb", 130, SYSTEM_TYPE));
-	////Ready->insertPCBatEnd(Ready->setupPCB("my second pcb2", 130, SYSTEM_TYPE));
-	//PCB* pcb = Ready->findPCB("my second pcb");
-	//if (pcb != 0) {
-	//	std::cout << pcb->getName();
-	//	Ready->removePCB(pcb);
-	//}
-	//std::cout << Ready->getPCBCount();
 
 	do {
 		//events
@@ -80,18 +77,23 @@ void Core::run() {
 				//switch on first element
 				switch (m_icommand.front()) {
 				case Commands::CREATE_PCB:
-					std::cout << m_parameters.size() << std::endl;
 					if (m_parameters.size() == 3) {
 						Ready->insertPCBatEnd(Ready->setupPCB(m_parameters[0], atoi(m_parameters[1].c_str()), atoi(m_parameters[2].c_str())));
-						//once were done with them dismiss 
-						m_scommand.clear();
-						m_parameters.clear();
-						Ui.setStringCommand(m_scommand);
 					}
 					break;
 				case Commands::DELETE_PCB:
+					if (m_parameters.size() == 1) {
+						PCB* temp = Ready->findPCB(m_parameters[0]);
+						if (temp) {
+							std::cout << temp->getName();
+							system("pause");
+							Ready->removePCB(temp);
+							Ready->freePCB(temp);
+						}
+					}
 					break;
 				case Commands::BLOCK:
+
 					break;
 				case Commands::UNBLOCK:
 					break;
@@ -110,6 +112,10 @@ void Core::run() {
 				case Commands::SHOW_BLOCKED:
 					break;
 				} //command switch
+				//once were done with them dismiss 
+				m_scommand.clear();
+				m_parameters.clear();
+				Ui.setStringCommand(m_scommand);
 			} //reading commands
 		} //erorr codes
 		//user predefined keys and visual buttons input
@@ -119,30 +125,30 @@ void Core::run() {
 				quit();
 				break;
 			case CONTROLS::DEBUG_MODE:
-				m_bdebugMode = m_bdebugMode == false ? true : false;
+				m_debugMode = m_debugMode == false ? true : false;
 				break;
 			case CONTROLS::RIGHT_CLICK:
 				//check if panel is opened
-				if (m_bshowcPanel) {
+				if (m_showcPanel) {
 					//check if it is in the panel are
 					if (Ui.getMouseX() >= 480 && Ui.getMouseX() <= 730) {
 						if (Ui.getMouseY() >= 290 && Ui.getMouseY() <= 570) {
 							//send x and y to panel
 							switch (Panel->clicked(Ui.getMouseX(), Ui.getMouseY())) {
 							case SHOW_VERSION:
-								m_bshowVersion = m_bshowVersion == false ? true : false;
+								m_showVersion = m_showVersion == false ? true : false;
 								break;
 							case SHOW_DATE:
-								m_bshowDate = m_bshowDate == false ? true : false;
+								m_showDate = m_showDate == false ? true : false;
 								break;
 							case SHOW_HELP:
-								m_bshowHelp = m_bshowHelp == false ? true : false;
+								m_showHelp = m_showHelp == false ? true : false;
 								break;
 							case DEBUG_MODE:
-								m_bdebugMode = m_bdebugMode == false ? true : false;
+								m_debugMode = m_debugMode == false ? true : false;
 								break;
 							case SHOW_DIRECTORY:
-								m_bshowDir = m_bshowDir == false ? true : false;
+								m_showDir = m_showDir == false ? true : false;
 								break;
 							case QUIT:
 								quit();
@@ -154,10 +160,10 @@ void Core::run() {
 				}
 				break;
 			case CONTROLS::CPANEL:
-				m_bshowcPanel = m_bshowcPanel == false ? true : false;
+				m_showcPanel = m_showcPanel == false ? true : false;
 				break;
 			case CONTROLS::CAMERA_MODE:
-				m_bshowcPanel = m_bshowcPanel == false ? true : false;
+				m_showcPanel = m_showcPanel == false ? true : false;
 				break;
 		}
 
@@ -175,7 +181,7 @@ void Core::run() {
 		Tmanager.drawText(m_pRenderer, "Howdy, welcome to the E1 2000 please press right ctrl for menu Thanks!", 470, 210);
 
 		//show panel
-		if (m_bshowcPanel) {
+		if (m_showcPanel) {
 			Tmanager.draw(m_pRenderer, m_Images_CMD);
 			Tmanager.drawText(m_pRenderer, "Display Version", 490, 330);
 			Tmanager.drawText(m_pRenderer, "Display Date", 490, 360);
@@ -185,23 +191,26 @@ void Core::run() {
 			Tmanager.drawText(m_pRenderer, "Quit", 490, 480);
 			Tmanager.drawText(m_pRenderer, "Command: " + m_scommand, 490, 520, Globals::COMMAND_PANEL_LINE_WRAP, true);
 		}
+		if (m_showTM) {
+			Tmanager.draw(m_pRenderer, m_Images_TM);
+		}
 
 		//draw text
-		if (m_bshowVersion) {
+		if (m_showVersion) {
 			Tmanager.drawText(m_pRenderer, "E1 2000 ver: Pawn Chess", 20, 30);
 		}
-		if (m_bshowDate) {
+		if (m_showDate) {
 			Tmanager.drawText(m_pRenderer, stime, 20, 10);
 		}
-		if (m_bshowHelp) {
-			Tmanager.drawText(m_pRenderer, "Help: Howdy murricans; please press version for op sys version, date for showing date, help for showing this text, directory for showing the directory and quit for quit; please note that you can also add commands to the command line. Thanks!", 20, 50);
+		if (m_showHelp) {
+			Tmanager.drawText(m_pRenderer, "Help: Howdy please press version for op sys version, date for showing date, help for showing this text, directory for showing the directory and quit for quit; please note that you can also add commands to the command line. Thanks!", 20, 50);
 		}
-		if (m_bshowDir) {
+		if (m_showDir) {
 			Tmanager.drawText(m_pRenderer, directory, 1000, 230);
 		}
 
 		//Debug mode
-		if (m_bdebugMode) {
+		if (m_debugMode) {
 			/*
 			text
 			*/
@@ -226,12 +235,12 @@ void Core::run() {
 			std::cout << "PCB Priority: " << test->getPriority() << std::endl;
 
 			//testing setup in queue
-			std::cout << "name from setupPCB " << Ready->setupPCB("name", 120, APPLICATION)->getName();
+			std::cout << "name from setupPCB " << Ready->setupPCB("tralala", 120, APPLICATION)->getName() << std::endl;
 			//testing insertion and finding
 			Ready->insertPCBatEnd(Ready->setupPCB("my first pcb", 120, APPLICATION));
+			std::cout << "Find pcb by name; getting priority: " << Ready->findPCB("my first pcb")->getPriority() << std::endl;
 			Ready->removePCB(Ready->findPCB("my first pcb"));
 			std::cout << "Node size is: " << Ready->getPCBCount() << std::endl;
-			std::cout << "Find pcb by name; getting priority: " << Ready->findPCB("my first pcb") << std::endl;
 		}
 
 
@@ -240,7 +249,7 @@ void Core::run() {
 		fpsCap();
 		//increase game turn
 		m_turn++;
-	} while (m_brunning);
+	} while (m_running);
 }
 
 void Core::fpsCap() {
@@ -252,7 +261,7 @@ void Core::fpsCap() {
 	}
 }
 void Core::quit() {
-	m_brunning = false;
+	m_running = false;
 }
 
 std::string Core::getTime(const time_t time) {
@@ -262,10 +271,7 @@ std::string Core::getTime(const time_t time) {
 
 	errno_t err = localtime_s(&ts, &time);
 
-	if (err)
-	{
-	}
-	else
+	if (!err)
 	{
 		// Format the time
 		strftime(szBuffer, sizeof(szBuffer), "Date is: %d %b %Y", &ts); //  %X%p
