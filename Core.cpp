@@ -85,21 +85,46 @@ void Core::run() {
 					if (m_parameters.size() == 1) {
 						PCB* temp = Ready->findPCB(m_parameters[0]);
 						if (temp) {
-							std::cout << temp->getName();
-							system("pause");
 							Ready->removePCB(temp);
 							Ready->freePCB(temp);
 						}
 					}
 					break;
 				case Commands::BLOCK:
-
+					if (m_parameters.size() == 1) {
+						PCB* temp = Ready->findPCB(m_parameters[0]);
+						if (temp) {
+							temp->setState(PROCESS_STATE_BLOCKED);
+							Ready->removePCB(temp);
+							Blocked->insertPCBatEnd(temp);
+						}
+					}
 					break;
 				case Commands::UNBLOCK:
+					if (m_parameters.size() == 1) {
+						PCB* temp = Ready->findPCB(m_parameters[0]);
+						if (temp) {
+							temp->setState(PROCESS_STATE_READY);
+							Blocked->removePCB(temp);
+							Ready->insertPCBatEnd(temp);
+						}
+					}
 					break;
 				case Commands::SUSPEND:
+					if (m_parameters.size() == 1) {
+						PCB* temp = Ready->findPCB(m_parameters[0]);
+						if (temp) {
+							temp->setState(PROCESS_STATE_SUSPENDED);
+						}
+					}
 					break;
 				case Commands::RESUME:
+					if (m_parameters.size() == 1) {
+						PCB* temp = Ready->findPCB(m_parameters[0]);
+						if (temp) {
+							temp->setState(PROCESS_STATE_NOT_SUSPENDED);
+						}
+					}
 					break;
 				case Commands::SET_PRIORITY:
 					break;
@@ -119,7 +144,8 @@ void Core::run() {
 			} //reading commands
 		} //erorr codes
 		//user predefined keys and visual buttons input
-		std::cout << Ready->getPCBCount() << std::endl;
+		std::cout << "Ready Queue: " << Ready->getPCBCount() << std::endl;
+		std::cout << "Blocked Queue: " << Blocked->getPCBCount() << std::endl;
 		switch (uinput) {
 			case CONTROLS::QUIT:
 				quit();

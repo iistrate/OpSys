@@ -72,40 +72,72 @@ def stringToCommand(string):
                         errors.append(2)
                 if (sarray[key+2]):
                     if (sarray[key+2].isdigit()):
-                        #pcb class is either system or app (0 or 1)
-                        if (sarray[key+2] in (0,1)):
-                            #append process class
+                        if (int(sarray[key+2]) >= -127 and int(sarray[key+2]) <= 127):
+                            #append process priority
                             params.append(sarray[key+2])
                         else:
                             #error code int range exceeded
                             errors.append(4)
                     else:
                         #error code not an int
-                        errors.append(3)
+                        errors.append(3);
                 if (sarray[key+3]):
                     if (sarray[key+3].isdigit()):
-                        if (sarray[key+3] >= -127 and sarray[key+3] <= 127):
-                            #append process priority
+                        #pcb class is either system or app (0 or 1)
+                        if (int(sarray[key+3]) in (0,1)):
+                            #append process class
                             params.append(sarray[key+3])
                         else:
                             #error code int range exceeded
                             errors.append(4)
                     else:
                         #error code not an int
-                        errors.append(3);
+                        errors.append(3)
                 commands.append(1)
             elif (word.lower() == "DeletePCB".lower()):
                 if (sarray[key+1]):
-                    #append process name to be deleted
-                    params.append(sarray[key+1])
+                    if (isinstance(sarray[key+1], str) and not sarray[key+1].isdigit()):
+                        #append process name to be deleted
+                        params.append(sarray[key+1])
+                    else:
+                        #error code not a string
+                        errors.append(2)
                 commands.append(2)
             elif (word.lower() == "Block".lower()):
+                if (sarray[key+1]):
+                    if (isinstance(sarray[key+1], str) and not sarray[key+1].isdigit()):
+                        #append process name to be blocked
+                        params.append(sarray[key+1])
+                    else:
+                        #error code not a string
+                        errors.append(2)
                 commands.append(3)
             elif (word.lower() == "Unblock".lower()):
+                if (sarray[key+1]):
+                    if (isinstance(sarray[key+1], str) and not sarray[key+1].isdigit()):
+                        #append process name to be unblocked
+                        params.append(sarray[key+1])
+                    else:
+                        #error code not a string
+                        errors.append(2)
                 commands.append(4)
             elif (word.lower() == "Suspend".lower()):
+                if (sarray[key+1]):
+                    if (isinstance(sarray[key+1], str) and not sarray[key+1].isdigit()):
+                        #append process name to be unblocked
+                        params.append(sarray[key+1])
+                    else:
+                        #error code not a string
+                        errors.append(2)
                 commands.append(5)
             elif (word.lower() == "Resume".lower()):
+                if (sarray[key+1]):
+                    if (isinstance(sarray[key+1], str) and not sarray[key+1].isdigit()):
+                        #append process name to be unblocked
+                        params.append(sarray[key+1])
+                    else:
+                        #error code not a string
+                        errors.append(2)
                 commands.append(6)
             elif (word.lower() == "Set priority".lower()):
                 commands.append(7)
