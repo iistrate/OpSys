@@ -151,8 +151,21 @@ void Core::run() {
 					break;
 				case Commands::SHOW_ALL:
 					m_showTM = true;
+					//ready
 					for (int i = 0; i < Ready->getPCBCount(); i++) {
-
+						PCB* temp = Ready->getPCBatIndex(i);
+						m_TaskManager += "Name: " + temp->getName() +
+							" Priority: " + std::to_string(temp->getPriority()) +
+							" Class: " + std::to_string(temp->getClass()) +
+							" Status: " + std::to_string(temp->getState());
+					}
+					//blocked
+					for (int i = 0; i < Blocked->getPCBCount(); i++) {
+						PCB* temp = Ready->getPCBatIndex(i);
+						m_TaskManager += "Name: " + temp->getName() +
+							" Priority: " + std::to_string(temp->getPriority()) +
+							" Class: " + std::to_string(temp->getClass()) +
+							" Status: " + std::to_string(temp->getState());
 					}
 					break;
 				case Commands::SHOW_READY:

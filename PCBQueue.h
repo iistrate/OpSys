@@ -34,6 +34,9 @@ public:
 	//get type of queue
 	bool getState();
 	void addPCB();
+
+	//get pcb at index
+	PCB* getPCBatIndex(int index);
 };
 
 #endif

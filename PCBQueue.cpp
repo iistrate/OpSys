@@ -87,6 +87,22 @@ PCB* PCBQueue::findPCB(std::string name) {
 	}
 	return 0;
 }
+PCB* PCBQueue::getPCBatIndex(int index) {
+	int cursor = 0;
+	//create node navigator, link navigator to start of list
+	PCBNode* navigator = m_head;
+	//traverse nodes
+	while (navigator != 0) {
+		if (navigator->getPCB() != 0) {
+			if (cursor == index) {
+				return navigator->getPCB();
+			}
+		}
+		navigator = navigator->getNext();
+		cursor++;
+	}
+	return 0;
+}
 
 void PCBQueue::removePCB(PCB* pcb) {
 	//find node containing pcb then remove it from list, and destroy the pcb

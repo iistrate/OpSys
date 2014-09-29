@@ -83,8 +83,8 @@ def stringToCommand(string):
                         errors.append(3);
                 if (sarray[key+3]):
                     if (sarray[key+3].isdigit()):
-                        #pcb class is either system or app (0 or 1)
-                        if (int(sarray[key+3]) in (0,1)):
+                        #pcb class is either system or app (1 or 2)
+                        if (int(sarray[key+3]) in (1,2)):
                             #append process class
                             params.append(sarray[key+3])
                         else:
