@@ -2,7 +2,7 @@
 
 Core::Core() :m_running(false), m_pRenderer(0), m_pWindow(0), m_fps(0), 
 m_fpsCap(Globals::FPS_CAP), m_turn(0), m_debugMode(false), m_cameraMode(false), m_execute(false),
-m_commandCursor(0), m_showcPanel(false), m_bcreatedPanel(false), m_showDate(false), m_showHelp(false), 
+m_commandCursor(0), m_showcPanel(false), m_createdPanel(false), m_showDate(false), m_showHelp(false),
 m_showVersion(false), m_showTM(false) {
 }
 
@@ -51,7 +51,7 @@ void Core::run() {
 
 	//create panel
 	GUI* Panel = new GUI(300, 400, 500, 300);
-	GUI* TaskManager = new GUI(300, 400, 0, 0);
+	GUI* TaskManager = new GUI(400, 650, 0, 0);
 	//get images for panels
 	//command panel
 	Panel->getImages(m_Images_CMD);
@@ -127,15 +127,42 @@ void Core::run() {
 					}
 					break;
 				case Commands::SET_PRIORITY:
+					if (m_parameters.size() == 2) {
+						PCB* temp;
+						//look in ready queue
+						temp = Ready->findPCB(m_parameters[0]) != NULL ? Ready->findPCB(m_parameters[0]) : Blocked->findPCB(m_parameters[0]);
+						if (temp) {
+							temp->setPriority(atoi(m_parameters[1].c_str()));
+						}
+					}
 					break;
 				case Commands::SHOW_PCB:
+					if (m_parameters.size() == 1) {
+						PCB* temp = Ready->findPCB(m_parameters[0]);
+						if (temp) {
+							m_showTM = true;
+							//build string
+							m_TaskManager = "Name: " + temp->getName() +
+								" Priority: " + std::to_string(temp->getPriority()) +
+								" Class: " + std::to_string(temp->getClass()) +
+								" Status: " + std::to_string(temp->getState());
+						}
+					}
 					break;
 				case Commands::SHOW_ALL:
+					m_showTM = true;
+					for (int i = 0; i < Ready->getPCBCount(); i++) {
+
+					}
 					break;
 				case Commands::SHOW_READY:
+					m_showTM = true;
 					break;
 				case Commands::SHOW_BLOCKED:
+					m_showTM = true;
 					break;
+				case Commands::HIDE_TASK_MANAGER:
+					m_showTM = false;
 				} //command switch
 				//once were done with them dismiss 
 				m_scommand.clear();
@@ -219,6 +246,9 @@ void Core::run() {
 		}
 		if (m_showTM) {
 			Tmanager.draw(m_pRenderer, m_Images_TM);
+			if (!m_TaskManager.empty()) {
+				Tmanager.drawText(m_pRenderer, m_TaskManager, 20, 40, Globals::TASK_MANAGER_LINE_WRAP);
+			}
 		}
 
 		//draw text

@@ -140,15 +140,42 @@ def stringToCommand(string):
                         errors.append(2)
                 commands.append(6)
             elif (word.lower() == "Set priority".lower()):
+                if (sarray[key+1]):
+                    if (isinstance(sarray[key+1], str) and not sarray[key+1].isdigit()):
+                        #append process name
+                        params.append(sarray[key+1])
+                    else:
+                        #error code not a string
+                        errors.append(2)
+                if (sarray[key+2]):
+                    if (sarray[key+2].isdigit()):
+                        if (int(sarray[key+2]) >= -127 and int(sarray[key+2]) <= 127):
+                            #append process priority
+                            params.append(sarray[key+2])
+                        else:
+                            #error code int range exceeded
+                            errors.append(4)
+                    else:
+                        #error code not an int
+                        errors.append(3);
                 commands.append(7)
-            elif (word.lower() == "Show PCB".lower()):
+            elif (word.lower() == "ShowPCB".lower()):
+                if (sarray[key+1]):
+                    if (isinstance(sarray[key+1], str) and not sarray[key+1].isdigit()):
+                        #append process name
+                        params.append(sarray[key+1])
+                    else:
+                        #error code not a string
+                        errors.append(2)
                 commands.append(8)
-            elif (word.lower() == "Show all".lower()):
+            elif (word.lower() == "ShowAll".lower()):
                 commands.append(9)
-            elif (word.lower() == "Show ready".lower()):
+            elif (word.lower() == "ShowReady".lower()):
                 commands.append(10)
-            elif (word.lower() == "Show blocked".lower()):
+            elif (word.lower() == "ShowBlocked".lower()):
                 commands.append(11)
+            elif (word.lower() == "Hide".lower()):
+                commands.append(12)
     #return commands as a list
     #print(commands)
     return (commands, params, errors)

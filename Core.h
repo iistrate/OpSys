@@ -36,7 +36,7 @@ private:
 	bool m_showDir;
 	bool m_showTM;
 
-	bool m_bcreatedPanel;
+	bool m_createdPanel;
 
 
 
@@ -52,6 +52,8 @@ private:
 	std::vector < std::string > m_parameters;
 	//hold error codes
 	std::vector < int > m_errorCodes;
+	//holds task manager string
+	std::string m_TaskManager;
 
 	//composition
 	TextureManager Tmanager;

@@ -6,6 +6,7 @@
 namespace Globals {
 	const int FPS_CAP = 90;
 	const int COMMAND_PANEL_LINE_WRAP = 200;
+	const int TASK_MANAGER_LINE_WRAP = 370;
 }
 
 enum WINDOW {
@@ -47,7 +48,8 @@ enum Commands {
 	SHOW_PCB,
 	SHOW_ALL,
 	SHOW_READY,
-	SHOW_BLOCKED
+	SHOW_BLOCKED,
+	HIDE_TASK_MANAGER
 };
 
 #endif
