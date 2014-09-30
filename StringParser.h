@@ -7,7 +7,7 @@
 
 #include <iostream>
 
-
+//aka the Python Whisperer
 class StringParser {
 private:
 	std::string m_scommand;

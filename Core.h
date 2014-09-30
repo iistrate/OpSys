@@ -10,8 +10,8 @@
 #include "Globals.h"
 #include "UserInput.h"
 #include "GUI.h"
-#include "PCBQueue.h"
 #include "StringParser.h"
+#include "Scheduler.h"
 
 
 class Core {

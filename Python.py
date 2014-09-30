@@ -62,6 +62,8 @@ def stringToCommand(string):
     for key, word in enumerate(sarray):
         if executeScript != -1:
             if (word.lower() == "CreatePCB".lower()):
+                #bypassed temporarily
+                continue;
                 #command + 3 parameters and execute command
                 if (sarray[key+1]):
                     if (isinstance(sarray[key+1], str) and not sarray[key+1].isdigit()):
@@ -95,6 +97,8 @@ def stringToCommand(string):
                         errors.append(3)
                 commands.append(1)
             elif (word.lower() == "DeletePCB".lower()):
+                #bypassed temporarily
+                continue;
                 if (sarray[key+1]):
                     if (isinstance(sarray[key+1], str) and not sarray[key+1].isdigit()):
                         #append process name to be deleted
@@ -104,6 +108,8 @@ def stringToCommand(string):
                         errors.append(2)
                 commands.append(2)
             elif (word.lower() == "Block".lower()):
+                #bypassed temporarily
+                continue;
                 if (sarray[key+1]):
                     if (isinstance(sarray[key+1], str) and not sarray[key+1].isdigit()):
                         #append process name to be blocked
@@ -113,6 +119,8 @@ def stringToCommand(string):
                         errors.append(2)
                 commands.append(3)
             elif (word.lower() == "Unblock".lower()):
+                #bypassed temporarily
+                continue;
                 if (sarray[key+1]):
                     if (isinstance(sarray[key+1], str) and not sarray[key+1].isdigit()):
                         #append process name to be unblocked
@@ -176,6 +184,15 @@ def stringToCommand(string):
                 commands.append(11)
             elif (word.lower() == "Hide".lower()):
                 commands.append(12)
+            elif (word.lower() == "Read".lower()):
+                if (sarray[key+1]):
+                    if (isinstance(sarray[key+1], str) and not sarray[key+1].isdigit()):
+                        #append file name to be opened
+                        params.append(sarray[key+1])
+                    else:
+                        #error code not a string
+                        errors.append(2)
+                commands.append(13)
     #return commands as a list
     #print(commands)
     return (commands, params, errors)
