@@ -45,8 +45,8 @@ void Core::run() {
 
 
 	//create process queues
-	Ready = new PCBQueue(true);
-	Blocked = new PCBQueue(false);
+	m_Ready = new PCBQueue(true);
+	m_Blocked = new PCBQueue(false);
 
 
 	//create panel
@@ -57,6 +57,8 @@ void Core::run() {
 	Panel->getImages(m_Images_CMD);
 	//task manager
 	TaskManager->getImages(m_Images_TM);
+	//Scheduler
+	Scheduler* E1Scheduler = new Scheduler(*m_Ready, *m_Blocked);
 
 	//initialize python parser
 	StringParser* Parser = new StringParser;
@@ -78,41 +80,41 @@ void Core::run() {
 				switch (m_icommand.front()) {
 				case Commands::CREATE_PCB:
 					if (m_parameters.size() == 3) {
-						Ready->insertPCBatEnd(Ready->setupPCB(m_parameters[0], atoi(m_parameters[1].c_str()), atoi(m_parameters[2].c_str())));
+						m_Ready->insertPCBatEnd(m_Ready->setupPCB(m_parameters[0], atoi(m_parameters[1].c_str()), atoi(m_parameters[2].c_str())));
 					}
 					break;
 				case Commands::DELETE_PCB:
 					if (m_parameters.size() == 1) {
-						PCB* temp = Ready->findPCB(m_parameters[0]);
+						PCB* temp = m_Ready->findPCB(m_parameters[0]);
 						if (temp) {
-							Ready->removePCB(temp);
-							Ready->freePCB(temp);
+							m_Ready->removePCB(temp);
+							m_Ready->freePCB(temp);
 						}
 					}
 					break;
 				case Commands::BLOCK:
 					if (m_parameters.size() == 1) {
-						PCB* temp = Ready->findPCB(m_parameters[0]);
+						PCB* temp = m_Ready->findPCB(m_parameters[0]);
 						if (temp) {
 							temp->setState(PROCESS_STATE_BLOCKED);
-							Ready->removePCB(temp);
-							Blocked->insertPCBatEnd(temp);
+							m_Ready->removePCB(temp);
+							m_Blocked->insertPCBatEnd(temp);
 						}
 					}
 					break;
 				case Commands::UNBLOCK:
 					if (m_parameters.size() == 1) {
-						PCB* temp = Ready->findPCB(m_parameters[0]);
+						PCB* temp = m_Ready->findPCB(m_parameters[0]);
 						if (temp) {
 							temp->setState(PROCESS_STATE_READY);
-							Blocked->removePCB(temp);
-							Ready->insertPCBatEnd(temp);
+							m_Blocked->removePCB(temp);
+							m_Ready->insertPCBatEnd(temp);
 						}
 					}
 					break;
 				case Commands::SUSPEND:
 					if (m_parameters.size() == 1) {
-						PCB* temp = Ready->findPCB(m_parameters[0]);
+						PCB* temp = m_Ready->findPCB(m_parameters[0]);
 						if (temp) {
 							temp->setState(PROCESS_STATE_SUSPENDED);
 						}
@@ -120,7 +122,7 @@ void Core::run() {
 					break;
 				case Commands::RESUME:
 					if (m_parameters.size() == 1) {
-						PCB* temp = Ready->findPCB(m_parameters[0]);
+						PCB* temp = m_Ready->findPCB(m_parameters[0]);
 						if (temp) {
 							temp->setState(PROCESS_STATE_NOT_SUSPENDED);
 						}
@@ -130,7 +132,7 @@ void Core::run() {
 					if (m_parameters.size() == 2) {
 						PCB* temp;
 						//look in ready queue
-						temp = Ready->findPCB(m_parameters[0]) != NULL ? Ready->findPCB(m_parameters[0]) : Blocked->findPCB(m_parameters[0]);
+						temp = m_Ready->findPCB(m_parameters[0]) != NULL ? m_Ready->findPCB(m_parameters[0]) : m_Blocked->findPCB(m_parameters[0]);
 						if (temp) {
 							temp->setPriority(atoi(m_parameters[1].c_str()));
 						}
@@ -138,7 +140,7 @@ void Core::run() {
 					break;
 				case Commands::SHOW_PCB:
 					if (m_parameters.size() == 1) {
-						PCB* temp = Ready->findPCB(m_parameters[0]);
+						PCB* temp = m_Ready->findPCB(m_parameters[0]);
 						if (temp) {
 							m_showTM = true;
 							//build string
@@ -153,8 +155,8 @@ void Core::run() {
 					m_showTM = true;
 					PCB* temp;
 					//ready
-					for (int i = 0; i < Ready->getPCBCount(); i++) {
-						temp = Ready->getPCBatIndex(i);
+					for (int i = 0; i < m_Ready->getPCBCount(); i++) {
+						temp = m_Ready->getPCBatIndex(i);
 						if (temp) {
 							m_TaskManager += "Name: " + temp->getName() +
 								" Priority: " + std::to_string(temp->getPriority()) +
@@ -163,8 +165,8 @@ void Core::run() {
 						}
 					}
 					//blocked
-					for (int i = 0; i < Blocked->getPCBCount(); i++) {
-						temp = Blocked->getPCBatIndex(i);
+					for (int i = 0; i < m_Blocked->getPCBCount(); i++) {
+						temp = m_Blocked->getPCBatIndex(i);
 						if (temp) {
 							m_TaskManager += "Name: " + temp->getName() +
 								" Priority: " + std::to_string(temp->getPriority()) +
@@ -176,8 +178,8 @@ void Core::run() {
 				case Commands::SHOW_READY:
 					m_showTM = true;
 					//ready
-					for (int i = 0; i < Ready->getPCBCount(); i++) {
-						temp = Ready->getPCBatIndex(i);
+					for (int i = 0; i < m_Ready->getPCBCount(); i++) {
+						temp = m_Ready->getPCBatIndex(i);
 						if (temp) {
 							m_TaskManager += "Name: " + temp->getName() +
 								" Priority: " + std::to_string(temp->getPriority()) +
@@ -189,8 +191,8 @@ void Core::run() {
 				case Commands::SHOW_BLOCKED:
 					m_showTM = true;
 					//blocked
-					for (int i = 0; i < Blocked->getPCBCount(); i++) {
-						temp = Blocked->getPCBatIndex(i);
+					for (int i = 0; i < m_Blocked->getPCBCount(); i++) {
+						temp = m_Blocked->getPCBatIndex(i);
 						if (temp) {
 							m_TaskManager += "Name: " + temp->getName() +
 								" Priority: " + std::to_string(temp->getPriority()) +
@@ -203,7 +205,9 @@ void Core::run() {
 					m_showTM = false;
 					break;
 				case Commands::READ_FROM_FILE:
-					
+					if (m_parameters.size() > 0) {
+						E1Scheduler->parseFile(m_parameters[0]);
+					}
 					break;
 				} //command switch
 				//once were done with them dismiss 
@@ -213,8 +217,8 @@ void Core::run() {
 			} //reading commands
 		} //erorr codes
 		//user predefined keys and visual buttons input
-		std::cout << "Ready Queue: " << Ready->getPCBCount() << std::endl;
-		std::cout << "Blocked Queue: " << Blocked->getPCBCount() << std::endl;
+		std::cout << "Ready Queue: " << m_Ready->getPCBCount() << std::endl;
+		std::cout << "Blocked Queue: " << m_Blocked->getPCBCount() << std::endl;
 		switch (uinput) {
 			case CONTROLS::QUIT:
 				quit();
@@ -333,12 +337,12 @@ void Core::run() {
 			std::cout << "PCB Priority: " << test->getPriority() << std::endl;
 
 			//testing setup in queue
-			std::cout << "name from setupPCB " << Ready->setupPCB("tralala", 120, APPLICATION)->getName() << std::endl;
+			std::cout << "name from setupPCB " << m_Ready->setupPCB("tralala", 120, APPLICATION)->getName() << std::endl;
 			//testing insertion and finding
-			Ready->insertPCBatEnd(Ready->setupPCB("my first pcb", 120, APPLICATION));
-			std::cout << "Find pcb by name; getting priority: " << Ready->findPCB("my first pcb")->getPriority() << std::endl;
-			Ready->removePCB(Ready->findPCB("my first pcb"));
-			std::cout << "Node size is: " << Ready->getPCBCount() << std::endl;
+			m_Ready->insertPCBatEnd(m_Ready->setupPCB("my first pcb", 120, APPLICATION));
+			std::cout << "Find pcb by name; getting priority: " << m_Ready->findPCB("my first pcb")->getPriority() << std::endl;
+			m_Ready->removePCB(m_Ready->findPCB("my first pcb"));
+			std::cout << "Node size is: " << m_Ready->getPCBCount() << std::endl;
 		}
 
 

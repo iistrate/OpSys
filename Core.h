@@ -60,9 +60,10 @@ private:
 	UserInput Ui;
 	GUI* Panel;
 	StringParser* Parser;
+		
 	//process queues
-	PCBQueue* Ready;
-	PCBQueue* Blocked;
+	PCBQueue* m_Ready;
+	PCBQueue* m_Blocked;
 
 	//image sets
 	std::vector < Image* > m_Images;
