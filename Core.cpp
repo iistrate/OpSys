@@ -206,7 +206,7 @@ void Core::run() {
 					break;
 				case Commands::READ_FROM_FILE:
 					if (m_parameters.size() > 0) {
-						E1Scheduler->parseFile(m_parameters[0]);
+						E1Scheduler->addPCBS(m_parameters[0]);
 					}
 					break;
 				} //command switch

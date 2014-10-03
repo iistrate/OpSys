@@ -184,7 +184,7 @@ def stringToCommand(string):
                 commands.append(11)
             elif (word.lower() == "Hide".lower()):
                 commands.append(12)
-            elif (word.lower() == "Read".lower()):
+            elif (word.lower() == "SJF".lower()):
                 if (sarray[key+1]):
                     if (isinstance(sarray[key+1], str) and not sarray[key+1].isdigit()):
                         #append file name to be opened

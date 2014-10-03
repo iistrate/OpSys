@@ -26,3 +26,10 @@ std::vector < std::vector < std::string > > Scheduler::parseFile(std::string fil
 	file.close();
 	return PCBS;
 }
+void Scheduler::addPCBS(std::string filename) {
+	std::vector < std::vector < std::string > > PcbsInfo = parseFile(filename);
+	for (int i = 0; i < PcbsInfo.size(); i++) {
+		//name, class, priority, memory, time remaining, time of arrival, percentage of cpu
+		m_Ready.insertPCBatEnd(m_Ready.setupPCB(PcbsInfo[i][0], PcbsInfo[i][2] == "A" ? 1 : 2, atoi(PcbsInfo[i][1].c_str())));
+	}
+}
