@@ -36,9 +36,6 @@
     <ClCompile Include="GUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PCB.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="PCBQueue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

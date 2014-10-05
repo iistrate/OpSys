@@ -44,31 +44,27 @@ PCB* PCBQueue::setupPCB(std::string name, int priority, int classType) {
 void PCBQueue::insertPCBatEnd(PCB* pcb) {
 	//node to be inserted
 	PCBNode* newNode = new PCBNode(pcb);
+	pcb->setIndex(m_PCBcount);
 	//if there's no PCB's allocate node to head
 	if (m_PCBcount == 0) {
-		//link frontend
 		m_head = newNode;
-		//integrate in list
-		m_head->setNext(m_tail);
 	}
-	//if theres one PCB link tail
-	else if (m_PCBcount == 1) {
-		//link end
-		m_tail = newNode;
-		m_tail->setPrev(m_head);
-		m_head->setNext(m_tail);
-	}
-	//if there's PCB's in queue then navigate nodes to find the last one; pretty much just get the prev from last
 	else {
-		PCBNode* tmp;
-		//store tail in tmp
-		tmp = m_tail;
-		//make newNode as my last link
-		m_tail = newNode;
-		//get last pcb node from tail and link it to new node
-		tmp->getPrev()->setNext(m_tail);
-		//link tail to new node 
-		m_tail->setPrev(tmp->getPrev());
+		if (!m_tail) {
+			m_tail = newNode;
+			m_head->setNext(m_tail);
+			m_tail->setPrev(m_head);
+		}
+		else {
+			PCBNode* navigator;
+			navigator = m_head;
+			//go to last node
+			while (navigator->getNext() != 0) {
+				navigator = navigator->getNext();
+			}
+			navigator->setNext(newNode);
+			newNode->setPrev(navigator);
+		}
 	}
 	//increase PCB count
 	m_PCBcount++;
@@ -88,18 +84,14 @@ PCB* PCBQueue::findPCB(std::string name) {
 	return 0;
 }
 PCB* PCBQueue::getPCBatIndex(int index) {
-	int cursor = 0;
 	//create node navigator, link navigator to start of list
 	PCBNode* navigator = m_head;
 	//traverse nodes
 	while (navigator != 0) {
-		if (navigator->getPCB() != 0) {
-			if (cursor == index) {
-				return navigator->getPCB();
-			}
+		if (navigator->getPCB()->getIndex() == index) {
+			return navigator->getPCB();
 		}
 		navigator = navigator->getNext();
-		cursor++;
 	}
 	return 0;
 }

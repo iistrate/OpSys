@@ -1,10 +1,12 @@
 #ifndef SCHEDULER_H
 #define SCHEDULER_H
 
-#include "PCBQueue.h"
 #include <vector>
 #include <fstream>
 #include <sstream>
+
+#include "PCBQueue.h"
+#include "Globals.h"
 
 class Scheduler {
 private:

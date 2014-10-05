@@ -63,7 +63,7 @@ def stringToCommand(string):
         if executeScript != -1:
             if (word.lower() == "CreatePCB".lower()):
                 #bypassed temporarily
-                continue;
+                #continue;
                 #command + 3 parameters and execute command
                 if (sarray[key+1]):
                     if (isinstance(sarray[key+1], str) and not sarray[key+1].isdigit()):
@@ -147,7 +147,7 @@ def stringToCommand(string):
                         #error code not a string
                         errors.append(2)
                 commands.append(6)
-            elif (word.lower() == "Set priority".lower()):
+            elif (word.lower() == "SetPriority".lower()):
                 if (sarray[key+1]):
                     if (isinstance(sarray[key+1], str) and not sarray[key+1].isdigit()):
                         #append process name

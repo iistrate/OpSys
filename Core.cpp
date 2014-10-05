@@ -139,65 +139,60 @@ void Core::run() {
 					}
 					break;
 				case Commands::SHOW_PCB:
+					m_TaskManager = "Name: Priority: Class: Status: \n";
 					if (m_parameters.size() == 1) {
 						PCB* temp = m_Ready->findPCB(m_parameters[0]);
 						if (temp) {
 							m_showTM = true;
 							//build string
-							m_TaskManager = "Name: " + temp->getName() +
-								" Priority: " + std::to_string(temp->getPriority()) +
-								" Class: " + std::to_string(temp->getClass()) +
-								" Status: " + std::to_string(temp->getState());
+							m_TaskManager += temp->getName() + " "
+								+ std::to_string(temp->getPriority()) + " "
+								+ std::to_string(temp->getClass()) + " "
+								+ std::to_string(temp->getState()) + "\n";
 						}
 					}
 					break;
 				case Commands::SHOW_ALL:
+					m_TaskManager = "Name: Priority: Class: Status: \n";
 					m_showTM = true;
 					PCB* temp;
 					//ready
 					for (int i = 0; i < m_Ready->getPCBCount(); i++) {
 						temp = m_Ready->getPCBatIndex(i);
 						if (temp) {
-							m_TaskManager += "Name: " + temp->getName() +
-								" Priority: " + std::to_string(temp->getPriority()) +
-								" Class: " + std::to_string(temp->getClass()) +
-								" Status: " + std::to_string(temp->getState()) + "\n";
+							m_TaskManager += temp->getName() + " "
+								+ std::to_string(temp->getPriority()) + " "
+								+ std::to_string(temp->getClass()) + " "
+								+ std::to_string(temp->getState()) + "\n";
 						}
-					}
-					//blocked
-					for (int i = 0; i < m_Blocked->getPCBCount(); i++) {
-						temp = m_Blocked->getPCBatIndex(i);
-						if (temp) {
-							m_TaskManager += "Name: " + temp->getName() +
-								" Priority: " + std::to_string(temp->getPriority()) +
-								" Class: " + std::to_string(temp->getClass()) +
-								" Status: " + std::to_string(temp->getState()) + "\n";
-						}
+						temp = 0;
 					}
 					break;
 				case Commands::SHOW_READY:
+					m_TaskManager += "Name: Priority: Class: Status: \n";
 					m_showTM = true;
 					//ready
 					for (int i = 0; i < m_Ready->getPCBCount(); i++) {
 						temp = m_Ready->getPCBatIndex(i);
 						if (temp) {
-							m_TaskManager += "Name: " + temp->getName() +
-								" Priority: " + std::to_string(temp->getPriority()) +
-								" Class: " + std::to_string(temp->getClass()) +
-								" Status: " + std::to_string(temp->getState()) + "\n";
+							m_TaskManager = temp->getName() + " "
+								+ std::to_string(temp->getPriority()) + " "
+								+ std::to_string(temp->getClass()) + " "
+								+ std::to_string(temp->getState()) + "\n";
 						}
 					}
 					break;
 				case Commands::SHOW_BLOCKED:
+					m_TaskManager += "Name: Priority: Class: Status: \n";
 					m_showTM = true;
 					//blocked
 					for (int i = 0; i < m_Blocked->getPCBCount(); i++) {
 						temp = m_Blocked->getPCBatIndex(i);
 						if (temp) {
-							m_TaskManager += "Name: " + temp->getName() +
-								" Priority: " + std::to_string(temp->getPriority()) +
-								" Class: " + std::to_string(temp->getClass()) +
-								" Status: " + std::to_string(temp->getState()) + "\n";
+							m_TaskManager = temp->getName() + " "
+								+ std::to_string(temp->getPriority()) + " "
+								+ std::to_string(temp->getClass()) + " "
+								+ std::to_string(temp->getState()) + "\n";
 						}
 					}
 					break;

@@ -27,9 +27,15 @@ std::vector < std::vector < std::string > > Scheduler::parseFile(std::string fil
 	return PCBS;
 }
 void Scheduler::addPCBS(std::string filename) {
-	std::vector < std::vector < std::string > > PcbsInfo = parseFile(filename);
+	std::string name;
+	int classtype;
+	int priority;
+	std::vector < std::vector < std::string > > PcbsInfo = parseFile(filename + ".txt");
 	for (int i = 0; i < PcbsInfo.size(); i++) {
 		//name, class, priority, memory, time remaining, time of arrival, percentage of cpu
-		m_Ready.insertPCBatEnd(m_Ready.setupPCB(PcbsInfo[i][0], PcbsInfo[i][2] == "A" ? 1 : 2, atoi(PcbsInfo[i][1].c_str())));
+		name = PcbsInfo[i][0];
+		priority = atoi(PcbsInfo[i][2].c_str());
+		classtype = PcbsInfo[i][1].compare("A") ? APPLICATION : SYSTEM_TYPE;
+		m_Ready.insertPCBatEnd(m_Ready.setupPCB(name, priority, classtype));
 	}
 }
