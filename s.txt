@@ -3,4 +3,4 @@ MyPCB S 2 200 300 20 10
 SomePCB A 1 30 500 5 5
 Another S 100 200 500 20 7
 Haoles A 80 50 500 30 12
-Baoles S 5 128 500 40 9
+Baoles S 5 128 500 1 9
