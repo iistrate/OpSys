@@ -27,9 +27,6 @@ std::vector < std::vector < std::string > > Scheduler::parseFile(std::string fil
 	return PCBS;
 }
 void Scheduler::addPCBS(std::string filename) {
-	std::string name;
-	int classtype;
-	int priority;
 	std::vector < std::vector < std::string > > PcbsInfo = parseFile(filename + ".txt");
 	//
 	//sort vector by shell sort
@@ -47,23 +44,17 @@ void Scheduler::addPCBS(std::string filename) {
 		}
 	}
 	// end shell sort
+	std::string name;
+	int priority, classtype, memory, execTime, execStart, cpuUsed;
 	//0 name, 1 class, 2 priority, 3 memory, 4 time remaining, 5 time of arrival, 6 percentage of cpu
 	for (int i = 0; i < PcbsInfo.size(); i++) {
-		name = PcbsInfo[i][0];
+		std::string name = PcbsInfo[i][0];
 		priority = atoi(PcbsInfo[i][2].c_str());
 		classtype = PcbsInfo[i][1].compare("A") ? APPLICATION : SYSTEM_TYPE;
-		m_Ready.insertPCBatEnd(m_Ready.setupPCB(name, priority, classtype));
+		memory = atoi(PcbsInfo[i][3].c_str());
+		execTime = atoi(PcbsInfo[i][4].c_str());
+		execStart = atoi(PcbsInfo[i][5].c_str());
+		cpuUsed = atoi(PcbsInfo[i][6].c_str());
+		m_Ready.insertPCBatEnd(m_Ready.setupPCB(name, priority, classtype, memory, execTime, execStart, cpuUsed));
 	}
 }
-//for (int i = 0; i < PcbsInfo.size(); i++) {
-//	//0 name, 1 class, 2 priority, 3 memory, 4 time remaining, 5 time of arrival, 6 percentage of cpu
-//	for (int j = 0; j < PcbsInfo.size(); j++) {
-//		if (atoi(PcbsInfo[i][5].c_str()) < atoi(PcbsInfo[j][5].c_str())) {
-//			name = PcbsInfo[i][0];
-//			priority = atoi(PcbsInfo[i][2].c_str());
-//			classtype = PcbsInfo[i][1].compare("A") ? APPLICATION : SYSTEM_TYPE;
-//			m_Ready.insertPCBatEnd(m_Ready.setupPCB(name, priority, classtype));
-//			break;
-//		}
-//	}
-//}

@@ -25,7 +25,8 @@ private:
 	//cpu usage
 	int m_cpu;
 public:
-	PCB::PCB() : m_priority(0), m_processClass(0), m_processState(0), m_name("empty") {}
+	PCB::PCB() : m_priority(0), m_processClass(0), m_processState(0), m_name("empty"),
+				 m_index(0), m_memory(0), m_executionTime(0), m_executionStart(0), m_cpu(0) {}
 
 	//sets name
 	void setName(std::string name) {
@@ -52,8 +53,11 @@ public:
 	void setTimeOfArrival(int t) {
 		m_executionStart = t;
 	}
-	void getExecutionTime(int t) {
+	void setTimeOfExecution(int t) {
 		m_executionTime = t;
+	}
+	void setCPU(int c) {
+		m_cpu = c;
 	}
 
 	int getIndex() {
@@ -79,6 +83,9 @@ public:
 	}
 	int getExecutionTime() {
 		return m_executionTime;
+	}
+	int getCPU() {
+		return m_cpu;
 	}
 };
 

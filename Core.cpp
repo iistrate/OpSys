@@ -80,7 +80,7 @@ void Core::run() {
 				switch (m_icommand.front()) {
 				case Commands::CREATE_PCB:
 					if (m_parameters.size() == 3) {
-						m_Ready->insertPCBatEnd(m_Ready->setupPCB(m_parameters[0], atoi(m_parameters[1].c_str()), atoi(m_parameters[2].c_str())));
+						m_Ready->insertPCBatEnd(m_Ready->setupPCB(m_parameters[0], atoi(m_parameters[1].c_str()), atoi(m_parameters[2].c_str()), 0, 0, 0, 0));
 					}
 					break;
 				case Commands::DELETE_PCB:
@@ -153,7 +153,7 @@ void Core::run() {
 					}
 					break;
 				case Commands::SHOW_ALL:
-					m_TaskManager = "Name: Priority: Class: Status: \n";
+					m_TaskManager = "N: Prty: Cl: St: Mem: ExecTime: ArrTime: CPU: \n";
 					m_showTM = true;
 					PCB* temp;
 					//ready
@@ -163,7 +163,12 @@ void Core::run() {
 							m_TaskManager += temp->getName() + " "
 								+ std::to_string(temp->getPriority()) + " "
 								+ std::to_string(temp->getClass()) + " "
-								+ std::to_string(temp->getState()) + "\n";
+								+ std::to_string(temp->getState()) + " "
+								+ std::to_string(temp->getMemorySize()) + " "
+								+ std::to_string(temp->getExecutionTime()) + " "
+								+ std::to_string(temp->getTimeOfArrival()) + " "
+								+ std::to_string(temp->getCPU())
+								+ "\n";
 						}
 						temp = 0;
 					}
@@ -332,9 +337,9 @@ void Core::run() {
 			std::cout << "PCB Priority: " << test->getPriority() << std::endl;
 
 			//testing setup in queue
-			std::cout << "name from setupPCB " << m_Ready->setupPCB("tralala", 120, APPLICATION)->getName() << std::endl;
+			std::cout << "name from setupPCB " << m_Ready->setupPCB("tralala", 120, APPLICATION, 0, 0, 0, 0)->getName() << std::endl;
 			//testing insertion and finding
-			m_Ready->insertPCBatEnd(m_Ready->setupPCB("my first pcb", 120, APPLICATION));
+			m_Ready->insertPCBatEnd(m_Ready->setupPCB("my first pcb", 120, APPLICATION, 0, 0, 0, 0));
 			std::cout << "Find pcb by name; getting priority: " << m_Ready->findPCB("my first pcb")->getPriority() << std::endl;
 			m_Ready->removePCB(m_Ready->findPCB("my first pcb"));
 			std::cout << "Node size is: " << m_Ready->getPCBCount() << std::endl;

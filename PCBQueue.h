@@ -22,7 +22,7 @@ public:
 	//destroy pcb
 	void freePCB(PCB*);
 	//setup PCB
-	PCB* setupPCB(std::string name, int priority, int classType);
+	PCB* setupPCB(std::string name, int priority, int classType, int memory, int executionTime, int executionStart, int cpuUsed);
 	//insert pcb at end
 	void insertPCBatEnd(PCB* pcb);
 	//find pcb by name

@@ -20,7 +20,7 @@ void PCBQueue::freePCB(PCB* pcb) {
 	delete pcb;
 }
 //setup PCB
-PCB* PCBQueue::setupPCB(std::string name, int priority, int classType) {
+PCB* PCBQueue::setupPCB(std::string name, int priority, int classType, int memory, int executionTime, int executionStart, int cpuUsed) {
 	PCB* pcb = 0;
 	bool allocate = false;
 	//errror check
@@ -38,6 +38,10 @@ PCB* PCBQueue::setupPCB(std::string name, int priority, int classType) {
 		pcb->setClass(classType);
 		pcb->setPriority(priority);
 		pcb->setState(PROCESS_STATE_READY);
+		pcb->setMemorySize(memory);
+		pcb->setTimeOfExecution(executionTime);
+		pcb->setTimeOfArrival(executionStart);
+		pcb->setCPU(cpuUsed);
 	}
 	return pcb;
 }
