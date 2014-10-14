@@ -139,7 +139,7 @@ void Core::run() {
 					}
 					break;
 				case Commands::SHOW_PCB:
-					m_TaskManager = "Name: Priority: Class: Status: \n";
+					m_TaskManager = "N: Prty: Cl: St: Mem: ExecTime: ArrTime: CPU: \n";
 					if (m_parameters.size() == 1) {
 						PCB* temp = m_Ready->findPCB(m_parameters[0]);
 						if (temp) {
@@ -148,7 +148,12 @@ void Core::run() {
 							m_TaskManager += temp->getName() + " "
 								+ std::to_string(temp->getPriority()) + " "
 								+ std::to_string(temp->getClass()) + " "
-								+ std::to_string(temp->getState()) + "\n";
+								+ std::to_string(temp->getState()) + " "
+								+ std::to_string(temp->getMemorySize()) + " "
+								+ std::to_string(temp->getExecutionTime()) + " "
+								+ std::to_string(temp->getTimeOfArrival()) + " "
+								+ std::to_string(temp->getCPU())
+								+ "\n";
 						}
 					}
 					break;
@@ -172,23 +177,43 @@ void Core::run() {
 						}
 						temp = 0;
 					}
+					for (int i = 0; i < m_Ready->getPCBCount(); i++) {
+						temp = m_Blocked->getPCBatIndex(i);
+						if (temp) {
+							m_TaskManager += temp->getName() + " "
+								+ std::to_string(temp->getPriority()) + " "
+								+ std::to_string(temp->getClass()) + " "
+								+ std::to_string(temp->getState()) + " "
+								+ std::to_string(temp->getMemorySize()) + " "
+								+ std::to_string(temp->getExecutionTime()) + " "
+								+ std::to_string(temp->getTimeOfArrival()) + " "
+								+ std::to_string(temp->getCPU())
+								+ "\n";
+						}
+						temp = 0;
+					}
 					break;
 				case Commands::SHOW_READY:
-					m_TaskManager += "Name: Priority: Class: Status: \n";
+					m_TaskManager = "N: Prty: Cl: St: Mem: ExecTime: ArrTime: CPU: \n";
 					m_showTM = true;
 					//ready
 					for (int i = 0; i < m_Ready->getPCBCount(); i++) {
 						temp = m_Ready->getPCBatIndex(i);
 						if (temp) {
-							m_TaskManager = temp->getName() + " "
+							m_TaskManager += temp->getName() + " "
 								+ std::to_string(temp->getPriority()) + " "
 								+ std::to_string(temp->getClass()) + " "
-								+ std::to_string(temp->getState()) + "\n";
+								+ std::to_string(temp->getState()) + " "
+								+ std::to_string(temp->getMemorySize()) + " "
+								+ std::to_string(temp->getExecutionTime()) + " "
+								+ std::to_string(temp->getTimeOfArrival()) + " "
+								+ std::to_string(temp->getCPU())
+								+ "\n";
 						}
 					}
 					break;
 				case Commands::SHOW_BLOCKED:
-					m_TaskManager += "Name: Priority: Class: Status: \n";
+					m_TaskManager = "N: Prty: Cl: St: Mem: ExecTime: ArrTime: CPU: \n";
 					m_showTM = true;
 					//blocked
 					for (int i = 0; i < m_Blocked->getPCBCount(); i++) {
@@ -197,7 +222,31 @@ void Core::run() {
 							m_TaskManager = temp->getName() + " "
 								+ std::to_string(temp->getPriority()) + " "
 								+ std::to_string(temp->getClass()) + " "
-								+ std::to_string(temp->getState()) + "\n";
+								+ std::to_string(temp->getState()) + " "
+								+ std::to_string(temp->getMemorySize()) + " "
+								+ std::to_string(temp->getExecutionTime()) + " "
+								+ std::to_string(temp->getTimeOfArrival()) + " "
+								+ std::to_string(temp->getCPU())
+								+ "\n";
+						}
+					}
+					break;
+				case Commands::SHOW_RUNNING:
+					m_TaskManager = "N: Prty: Cl: St: Mem: ExecTime: ArrTime: CPU: \n";
+					m_showTM = true;
+					//ready
+					for (int i = 0; i < m_Ready->getPCBCount(); i++) {
+						temp = m_Ready->getPCBatIndex(i);
+						if (temp && temp->getState() == PCBi::PROCESS_STATE_RUNNING) {
+							m_TaskManager += temp->getName() + " "
+								+ std::to_string(temp->getPriority()) + " "
+								+ std::to_string(temp->getClass()) + " "
+								+ std::to_string(temp->getState()) + " "
+								+ std::to_string(temp->getMemorySize()) + " "
+								+ std::to_string(temp->getExecutionTime()) + " "
+								+ std::to_string(temp->getTimeOfArrival()) + " "
+								+ std::to_string(temp->getCPU())
+								+ "\n";
 						}
 					}
 					break;
@@ -206,7 +255,16 @@ void Core::run() {
 					break;
 				case Commands::READ_FROM_FILE:
 					if (m_parameters.size() > 0) {
+						//from file to scheduler
 						E1Scheduler->addPCBS(m_parameters[0]);
+					}
+					break;
+				case Commands::START_PROCESSES:
+					for (int i = 0; i < m_Ready->getPCBCount(); i++) {
+						temp = m_Ready->getPCBatIndex(i);
+						if (temp) {
+							temp->setState(PROCESS_STATE_RUNNING);
+						}
 					}
 					break;
 				} //command switch

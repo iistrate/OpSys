@@ -182,6 +182,8 @@ def stringToCommand(string):
                 commands.append(10)
             elif (word.lower() == "ShowBlocked".lower()):
                 commands.append(11)
+            elif (word.lower() == "ShowRunning".lower()):
+                commands.append(14)
             elif (word.lower() == "Hide".lower()):
                 commands.append(12)
             elif (word.lower() == "SJF".lower()):
@@ -193,6 +195,8 @@ def stringToCommand(string):
                         #error code not a string
                         errors.append(2)
                 commands.append(13)
+            elif (word.lower() == "StartProcesses".lower()):
+                commands.append(15)
     #return commands as a list
     #print(commands)
     return (commands, params, errors)
