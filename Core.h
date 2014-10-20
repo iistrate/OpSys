@@ -13,6 +13,11 @@
 #include "StringParser.h"
 #include "Scheduler.h"
 
+using std::vector;
+using std::cout;
+using std::string;
+using std::endl;
+
 
 class Core {
 private:
@@ -45,15 +50,17 @@ private:
 	Uint32 m_fpsCap;
 
 	//holds visual string command for sdl
-	std::string m_scommand;
+	string m_scommand;
 	//holds translated commands
-	std::vector < int > m_icommand;
+	vector < int > m_icommand;
 	//holds parameter commands
-	std::vector < std::string > m_parameters;
+	vector < string > m_parameters;
 	//hold error codes
-	std::vector < int > m_errorCodes;
+	vector < int > m_errorCodes;
 	//holds task manager string
-	std::string m_TaskManager;
+	string m_TaskManager;
+	//hold forced commands
+	vector < int > m_isystemCommands;
 
 	//composition
 	TextureManager Tmanager;
@@ -66,9 +73,9 @@ private:
 	PCBQueue* m_Blocked;
 
 	//image sets
-	std::vector < Image* > m_Images;
-	std::vector < Image* > m_Images_CMD;
-	std::vector < Image* > m_Images_TM;
+	vector < Image* > m_Images;
+	vector < Image* > m_Images_CMD;
+	vector < Image* > m_Images_TM;
 
 	enum ErrorCodes {
 		INVALID_SYNTAX = 1,
@@ -78,7 +85,10 @@ private:
 	};
 
 public:
-	Core();
+	Core::Core() :m_running(false), m_pRenderer(0), m_pWindow(0), m_fps(0),
+		m_fpsCap(Globals::FPS_CAP), m_turn(0), m_debugMode(false), m_cameraMode(false), m_execute(false),
+		m_commandCursor(0), m_showcPanel(false), m_createdPanel(false), m_showDate(false), m_showHelp(false),
+		m_showVersion(false), m_showTM(false) {}	
 	//handles sdl vars
 	~Core();
 
@@ -91,10 +101,13 @@ public:
 	//fps
 	void fpsCap();
 	//get time
-	std::string getTime(const time_t time);
+	string getTime(const time_t time);
 
 	//list dir
-	std::string listDir();
+	string listDir();
+
+	//add system commands to user command
+	void addSystem(void);
 };
 
 #endif

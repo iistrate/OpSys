@@ -1,10 +1,5 @@
 #include "Core.h"
 
-Core::Core() :m_running(false), m_pRenderer(0), m_pWindow(0), m_fps(0), 
-m_fpsCap(Globals::FPS_CAP), m_turn(0), m_debugMode(false), m_cameraMode(false), m_execute(false),
-m_commandCursor(0), m_showcPanel(false), m_createdPanel(false), m_showDate(false), m_showHelp(false),
-m_showVersion(false), m_showTM(false) {
-}
 
 void Core::init(const char* title, int x, int y, int w, int h, int flags) {
 	//start loop
@@ -22,11 +17,11 @@ void Core::init(const char* title, int x, int y, int w, int h, int flags) {
 			IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
 		}
 		else {
-			std::cout << "Window failed to load" << std::endl;
+			cout << "Window failed to load" << endl;
 		}
 	}
 	else {
-		std::cout << "SDL failed to initialize" << std::endl;
+		cout << "SDL failed to initialize" << endl;
 	}
 }
 
@@ -38,9 +33,9 @@ void Core::run() {
 	
 	//time 
 	time_t tm;
-	std::string stime;
+	string stime;
 	//directory listing
-	std::string directory = listDir();
+	string directory = listDir();
 
 
 
@@ -67,15 +62,26 @@ void Core::run() {
 	do {
 		//events
 		uinput = Ui.getCommand();
+
 		//written
 		//get command from input
 		m_scommand = Ui.getStringCommand();
-		//send string to python and get sanitized string and list of commands as a vector of ints
+		//send string to python and get sanitized string, list of commands, 
+		//list of parameters and a list of error codes as a vector of ints
 		m_scommand = Parser->parseString(m_icommand, m_scommand, m_parameters, m_errorCodes);
+		
+		//reconsider removal used only for special chars
 		Ui.setStringCommand(m_scommand);
+		//end reconsider
+
+		//add System commands
+		if (!m_isystemCommands.empty()) {
+			addSystem();
+		}
+		//if no error codes
 		if (m_errorCodes.size() == 0) {
 			//user written commands
-			if (m_icommand.size() > 0) {
+			while (m_icommand.size() > 0) {
 				//switch on first element
 				switch (m_icommand.front()) {
 				case Commands::CREATE_PCB:
@@ -257,6 +263,10 @@ void Core::run() {
 					if (m_parameters.size() > 0) {
 						//from file to scheduler
 						E1Scheduler->addPCBS(m_parameters[0]);
+						//show processes
+						m_icommand.push_back(SHOW_READY);
+						//dispatch to running
+						m_icommand.push_back(START_PROCESSES);
 					}
 					break;
 				case Commands::START_PROCESSES:
@@ -264,6 +274,7 @@ void Core::run() {
 						temp = m_Ready->getPCBatIndex(i);
 						if (temp) {
 							temp->setState(PROCESS_STATE_RUNNING);
+							cout << "started: " << temp->getName() << endl;
 						}
 					}
 					break;
@@ -272,11 +283,12 @@ void Core::run() {
 				m_scommand.clear();
 				m_parameters.clear();
 				Ui.setStringCommand(m_scommand);
+				m_icommand.erase(m_icommand.begin());
 			} //reading commands
 		} //erorr codes
 		//user predefined keys and visual buttons input
-		std::cout << "Ready Queue: " << m_Ready->getPCBCount() << std::endl;
-		std::cout << "Blocked Queue: " << m_Blocked->getPCBCount() << std::endl;
+		cout << "Ready Queue: " << m_Ready->getPCBCount() << std::endl;
+		cout << "Blocked Queue: " << m_Blocked->getPCBCount() << std::endl;
 		switch (uinput) {
 			case CONTROLS::QUIT:
 				quit();
@@ -389,18 +401,18 @@ void Core::run() {
 			test->setPriority(120);
 			test->setState(PCBi::PROCESS_STATE_BLOCKED);
 
-			std::cout << "PCB Class: " << test->getClass() << std::endl;
-			std::cout << "PCB Name: " << test->getName() << std::endl;
-			std::cout << "PCB State: " << test->getState() << std::endl;
-			std::cout << "PCB Priority: " << test->getPriority() << std::endl;
+			cout << "PCB Class: " << test->getClass() << endl;
+			cout << "PCB Name: " << test->getName() << endl;
+			cout << "PCB State: " << test->getState() << endl;
+			cout << "PCB Priority: " << test->getPriority() << endl;
 
 			//testing setup in queue
-			std::cout << "name from setupPCB " << m_Ready->setupPCB("tralala", 120, APPLICATION, 0, 0, 0, 0)->getName() << std::endl;
+			cout << "name from setupPCB " << m_Ready->setupPCB("tralala", 120, APPLICATION, 0, 0, 0, 0)->getName() << endl;
 			//testing insertion and finding
 			m_Ready->insertPCBatEnd(m_Ready->setupPCB("my first pcb", 120, APPLICATION, 0, 0, 0, 0));
-			std::cout << "Find pcb by name; getting priority: " << m_Ready->findPCB("my first pcb")->getPriority() << std::endl;
+			cout << "Find pcb by name; getting priority: " << m_Ready->findPCB("my first pcb")->getPriority() << endl;
 			m_Ready->removePCB(m_Ready->findPCB("my first pcb"));
-			std::cout << "Node size is: " << m_Ready->getPCBCount() << std::endl;
+			cout << "Node size is: " << m_Ready->getPCBCount() << endl;
 		}
 
 
@@ -485,4 +497,11 @@ std::string Core::listDir() {
 	Py_Finalize();
 	//return parsed string
 	return PyUnicode_AsUTF8(m_POstring);
+}
+//add system commands to user command queue
+void Core::addSystem(void) {
+	for (int i = 0; i < m_isystemCommands.size(); i++) {
+		m_icommand.push_back(m_isystemCommands[i]);
+	}
+	m_isystemCommands.clear();
 }
