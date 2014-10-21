@@ -42,6 +42,7 @@ void Core::run() {
 	//create process queues
 	m_Ready = new PCBQueue(true);
 	m_Blocked = new PCBQueue(false);
+	m_Completed = new PCBQueue(false);
 
 
 	//create panel
@@ -60,10 +61,10 @@ void Core::run() {
 	Parser->init();
 
 	do {
-		//events
+		//events, mouse or keyboard
 		uinput = Ui.getCommand();
 
-		//written
+		//string commands
 		//get command from input
 		m_scommand = Ui.getStringCommand();
 		//send string to python and get sanitized string, list of commands, 
@@ -73,6 +74,8 @@ void Core::run() {
 		//reconsider removal used only for special chars
 		Ui.setStringCommand(m_scommand);
 		//end reconsider
+
+
 
 		//add System commands
 		if (!m_isystemCommands.empty()) {
@@ -145,7 +148,7 @@ void Core::run() {
 					}
 					break;
 				case Commands::SHOW_PCB:
-					m_TaskManager = "N: Prty: Cl: St: Mem: ExecTime: ArrTime: CPU: \n";
+					m_TaskManager = "Individual PCB:\nN: Prty: Cl: St: Mem: ExecTime: ArrTime: CPU: \n";
 					if (m_parameters.size() == 1) {
 						PCB* temp = m_Ready->findPCB(m_parameters[0]);
 						if (temp) {
@@ -164,7 +167,7 @@ void Core::run() {
 					}
 					break;
 				case Commands::SHOW_ALL:
-					m_TaskManager = "N: Prty: Cl: St: Mem: ExecTime: ArrTime: CPU: \n";
+					m_TaskManager = "Show all PCB's\nN: Prty: Cl: St: Mem: ExecTime: ArrTime: CPU: \n";
 					m_showTM = true;
 					PCB* temp;
 					//ready
@@ -183,7 +186,7 @@ void Core::run() {
 						}
 						temp = 0;
 					}
-					for (int i = 0; i < m_Ready->getPCBCount(); i++) {
+					for (int i = 0; i < m_Blocked->getPCBCount(); i++) {
 						temp = m_Blocked->getPCBatIndex(i);
 						if (temp) {
 							m_TaskManager += temp->getName() + " "
@@ -200,7 +203,7 @@ void Core::run() {
 					}
 					break;
 				case Commands::SHOW_READY:
-					m_TaskManager = "N: Prty: Cl: St: Mem: ExecTime: ArrTime: CPU: \n";
+					m_TaskManager = "Show ready PCB's\nN: Prty: Cl: St: Mem: ExecTime: ArrTime: CPU: \n";
 					m_showTM = true;
 					//ready
 					for (int i = 0; i < m_Ready->getPCBCount(); i++) {
@@ -219,7 +222,7 @@ void Core::run() {
 					}
 					break;
 				case Commands::SHOW_BLOCKED:
-					m_TaskManager = "N: Prty: Cl: St: Mem: ExecTime: ArrTime: CPU: \n";
+					m_TaskManager = "Show blocked PCB's\nN: Prty: Cl: St: Mem: ExecTime: ArrTime: CPU: \n";
 					m_showTM = true;
 					//blocked
 					for (int i = 0; i < m_Blocked->getPCBCount(); i++) {
@@ -238,7 +241,7 @@ void Core::run() {
 					}
 					break;
 				case Commands::SHOW_RUNNING:
-					m_TaskManager = "N: Prty: Cl: St: Mem: ExecTime: ArrTime: CPU: \n";
+					m_TaskManager = "Show running PCB's\nN: Prty: Cl: St: Mem: ExecTime: ArrTime: CPU: \n";
 					m_showTM = true;
 					//ready
 					for (int i = 0; i < m_Ready->getPCBCount(); i++) {
@@ -265,8 +268,6 @@ void Core::run() {
 						E1Scheduler->addPCBS(m_parameters[0]);
 						//show processes
 						m_icommand.push_back(SHOW_READY);
-						//dispatch to running
-						m_icommand.push_back(START_PROCESSES);
 					}
 					break;
 				case Commands::START_PROCESSES:
@@ -274,7 +275,34 @@ void Core::run() {
 						temp = m_Ready->getPCBatIndex(i);
 						if (temp) {
 							temp->setState(PROCESS_STATE_RUNNING);
-							cout << "started: " << temp->getName() << endl;
+						}
+						m_icommand.push_back(SHOW_RUNNING);
+					}
+					break;
+				case Commands::SHOW_COMPLETED:
+					m_TaskManager = "Show Completed PCB's\nN: Prty: Cl: St: Mem: ExecTime: ArrTime: CPU: \n";
+					m_showTM = true;
+					//ready
+					for (int i = 0; i < m_Completed->getPCBCount(); i++) {
+						temp = m_Completed->getPCBatIndex(i);
+						if (temp && temp->getState() == PCBi::PROCESS_STATE_COMPLETED) {
+							m_TaskManager += temp->getName() + " "
+								+ std::to_string(temp->getPriority()) + " "
+								+ std::to_string(temp->getClass()) + " "
+								+ std::to_string(temp->getState()) + " "
+								+ std::to_string(temp->getMemorySize()) + " "
+								+ std::to_string(temp->getExecutionTime()) + " "
+								+ std::to_string(temp->getTimeOfArrival()) + " "
+								+ std::to_string(temp->getCPU())
+								+ "\n";
+						}
+					}
+					break;
+				case Commands::CLEAR_COMPLETED:
+					for (int i = 0; i < m_Completed->getPCBCount(); i++) {
+						temp = m_Completed->getPCBatIndex(i);
+						if (temp) {
+							m_Completed->removePCB(temp);
 						}
 					}
 					break;
@@ -286,9 +314,12 @@ void Core::run() {
 				m_icommand.erase(m_icommand.begin());
 			} //reading commands
 		} //erorr codes
-		//user predefined keys and visual buttons input
+//
 		cout << "Ready Queue: " << m_Ready->getPCBCount() << std::endl;
 		cout << "Blocked Queue: " << m_Blocked->getPCBCount() << std::endl;
+		cout << "Completed Queue: " << m_Completed->getPCBCount() << endl;
+		//
+		//user predefined keys and visual buttons input
 		switch (uinput) {
 			case CONTROLS::QUIT:
 				quit();
@@ -421,7 +452,30 @@ void Core::run() {
 		fpsCap();
 		//increase game turn
 		m_turn++;
+		//run programs
+		runPrograms();
 	} while (m_running);
+}
+//run pcbs
+void Core::runPrograms() {
+	for (int i = 0; i < m_Ready->getPCBCount(); i++) {
+		PCB* temp = m_Ready->getPCBatIndex(i);
+		if (temp) {
+			//get execution time
+			int exectime = temp->getExecutionTime();
+			//if still executing
+			if (exectime > 0) {
+				exectime--;
+				temp->setTimeOfExecution(exectime);
+			}
+			//remove from ready queue
+			else {
+				temp->setState(PROCESS_STATE_COMPLETED);
+				m_Completed->insertPCBatEnd(temp);
+				m_Ready->removePCB(temp);
+			}
+		}
+	}
 }
 
 void Core::fpsCap() {

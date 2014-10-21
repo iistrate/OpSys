@@ -103,42 +103,35 @@ PCB* PCBQueue::getPCBatIndex(int index) {
 void PCBQueue::removePCB(PCB* pcb) {
 	//find node containing pcb then remove it from list, and destroy the pcb
 	PCBNode* navigator = m_head;
-	bool unlinked = false;
-	do {
+	PCBNode* temp;
+	while (navigator != 0) {
 		if (navigator->getPCB() != 0) {
 			if (navigator->getPCB()->getName() == pcb->getName()) {
-				//if start node
 				if (navigator == m_head) {
 					if (m_PCBcount > 1) {
-						m_head = m_head->getNext();
+						m_head = navigator->getNext();
 						m_head->setPrev(0);
 					}
-					//if it's just head delete; no unlinking needed
-					unlinked = true;
+					else {
+						delete m_head;
+					}
 				}
-				//if end node
 				else if (navigator == m_tail) {
-					m_tail = m_tail->getPrev();
+					m_tail = navigator->getPrev();
 					m_tail->setNext(0);
-					unlinked = true;
 				}
-				//if any other node
 				else {
-					navigator->getPrev()->setNext(navigator->getNext());
-					navigator->getNext()->setPrev(navigator->getPrev());
-					unlinked = true;
+					temp = navigator->getPrev();
+					temp->setNext(navigator->getNext());
+					delete navigator;
 				}
+				m_PCBcount--;
+				break;
 			}
-		}
-		if (unlinked) {
-			//deallocate memory
-			//decrease count
-			m_PCBcount--;
-			//with navigator deleted can't go to next line so just break
-			break;
+
 		}
 		navigator = navigator->getNext();
-	} while (navigator != 0);
+	}
 }
 
 //return PCB count

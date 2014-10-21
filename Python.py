@@ -195,8 +195,12 @@ def stringToCommand(string):
                         #error code not a string
                         errors.append(2)
                 commands.append(13)
-            elif (word.lower() == "StartProcesses".lower()):
+            elif (word.lower() == "Dispatch".lower()):
                 commands.append(15)
+            elif (word.lower() == "ShowCompleted".lower()):
+                commands.append(16)  
+            elif (word.lower() == "ClearCompleted".lower()):
+                commands.append(17)  
     #return commands as a list
     #print(commands)
     return (commands, params, errors)

@@ -71,6 +71,7 @@ private:
 	//process queues
 	PCBQueue* m_Ready;
 	PCBQueue* m_Blocked;
+	PCBQueue* m_Completed;
 
 	//image sets
 	vector < Image* > m_Images;
@@ -108,6 +109,9 @@ public:
 
 	//add system commands to user command
 	void addSystem(void);
+
+	//run pcbs
+	void runPrograms();
 };
 
 #endif
