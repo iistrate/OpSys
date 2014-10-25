@@ -84,11 +84,12 @@ void Core::run() {
 		if (m_errorCodes.size() == 0) {
 			//user written commands
 			while (m_icommand.size() > 0) {
-				//switch on first element
+				//switch on first command
 				switch (m_icommand.front()) {
 				case Commands::CREATE_PCB:
 					if (m_parameters.size() == 3) {
-						m_Ready->insertPCBatEnd(m_Ready->setupPCB(m_parameters[0], atoi(m_parameters[1].c_str()), atoi(m_parameters[2].c_str()), 0, 0, 0, 0));
+						m_Ready->insertPCBatEnd(m_Ready->setupPCB(m_parameters[0], atoi(m_parameters[1].c_str()), 
+							atoi(m_parameters[2].c_str()), 0, 0, 0, 0));
 					}
 					break;
 				case Commands::DELETE_PCB:
@@ -473,6 +474,10 @@ void Core::runPrograms() {
 					temp->setState(PROCESS_STATE_COMPLETED);
 					m_Completed->insertPCBatEnd(temp);
 					m_Ready->removePCB(temp);
+//test removal
+//					cout << m_Ready->getPCBCount() << endl;
+//					system("pause");
+//end test
 				}
 			}
 		}

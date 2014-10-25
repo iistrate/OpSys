@@ -91,7 +91,7 @@ PCB* PCBQueue::getPCBatIndex(int index) {
 	PCBNode* navigator = m_head;
 	//traverse nodes
 	int count = 0;
-	while (navigator != 0 && count <= m_PCBcount) {
+	while (navigator != 0) {
 		if (count == index) {
 			return navigator->getPCB();
 		}
@@ -101,10 +101,17 @@ PCB* PCBQueue::getPCBatIndex(int index) {
 	return 0;
 }
 
+void PCBQueue::printPCBs() {
+	PCBNode* navigator = m_head;
+	while (navigator != 0) {
+		cout << navigator->getPCB()->getName() << endl;
+		navigator = navigator->getNext();
+	}
+}
+
 void PCBQueue::removePCB(PCB* pcb) {
 	//find node containing pcb then remove it from list, and destroy the pcb
 	PCBNode* navigator = m_head;
-	PCBNode* temp;
 	while (navigator != 0) {
 		if (navigator->getPCB() != 0) {
 			if (navigator->getPCB()->getName() == pcb->getName()) {
@@ -114,7 +121,6 @@ void PCBQueue::removePCB(PCB* pcb) {
 						m_head->setPrev(0);
 					}
 					else {
-						delete m_head;
 					}
 				}
 				else if (navigator == m_tail) {
@@ -122,9 +128,11 @@ void PCBQueue::removePCB(PCB* pcb) {
 					m_tail->setNext(0);
 				}
 				else {
-					temp = navigator->getPrev();
-					temp->setNext(navigator->getNext());
-					delete navigator;
+					PCBNode* next, *prev;
+					prev = navigator->getPrev();
+					next = navigator->getNext();
+					prev->setNext(next);
+					next->setPrev(prev);
 				}
 				m_PCBcount--;
 				break;

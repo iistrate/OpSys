@@ -3,6 +3,9 @@
 
 #include "PCBNode.h"
 
+using std::cout;
+using std::endl;
+
 
 class PCBQueue {
 private:
@@ -18,7 +21,7 @@ public:
 	PCBQueue(bool state);
 
 	//create pcb
-	PCB* allocatePCB();
+	PCB* allocatePCB(void);
 	//destroy pcb
 	void freePCB(PCB*);
 	//setup PCB
@@ -30,13 +33,14 @@ public:
 	//remove pcb
 	void removePCB(PCB* pcb);
 	//count pcbs in queue
-	int getPCBCount();
+	int getPCBCount(void);
 	//get type of queue
-	bool getState();
-	void addPCB();
+	bool getState(void);
+	void addPCB(void);
 
 	//get pcb at index
 	PCB* getPCBatIndex(int index);
+	void printPCBs(void);
 };
 
 #endif
