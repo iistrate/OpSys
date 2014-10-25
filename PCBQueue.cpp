@@ -109,6 +109,17 @@ void PCBQueue::printPCBs() {
 	}
 }
 
+void PCBQueue::clearQueue() {
+	PCBNode* navigator = m_head;
+	PCBNode* temp;
+	while (navigator != 0) {
+		temp = navigator->getNext();
+		delete navigator;
+		navigator = temp;
+		m_PCBcount--;
+	}
+}
+
 void PCBQueue::removePCB(PCB* pcb) {
 	//find node containing pcb then remove it from list, and destroy the pcb
 	PCBNode* navigator = m_head;

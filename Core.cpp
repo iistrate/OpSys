@@ -301,12 +301,8 @@ void Core::run() {
 					}
 					break;
 				case Commands::CLEAR_COMPLETED:
-					for (int i = 0; i < m_Completed->getPCBCount(); i++) {
-						temp = m_Completed->getPCBatIndex(i);
-						if (temp) {
-							m_Completed->removePCB(temp);
-						}
-					}
+					m_Completed->clearQueue();
+					m_batchTime = 0;
 					break;
 				} //command switch
 				//once we're done with the commands clear command queues 

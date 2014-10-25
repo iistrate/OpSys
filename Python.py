@@ -63,7 +63,7 @@ def stringToCommand(string):
         if executeScript != -1:
             if (word.lower() == "CreatePCB".lower()):
                 #bypassed temporarily
- #               continue;
+                continue;
                 #command + 3 parameters and execute command
                 if (sarray[key+1]):
                     if (isinstance(sarray[key+1], str) and not sarray[key+1].isdigit()):
@@ -109,7 +109,7 @@ def stringToCommand(string):
                 commands.append(2)
             elif (word.lower() == "Block".lower()):
                 #bypassed temporarily
- #               continue;
+                continue;
                 if (sarray[key+1]):
                     if (isinstance(sarray[key+1], str) and not sarray[key+1].isdigit()):
                         #append process name to be blocked
@@ -120,7 +120,7 @@ def stringToCommand(string):
                 commands.append(3)
             elif (word.lower() == "Unblock".lower()):
                 #bypassed temporarily
-#                continue;
+                continue;
                 if (sarray[key+1]):
                     if (isinstance(sarray[key+1], str) and not sarray[key+1].isdigit()):
                         #append process name to be unblocked
