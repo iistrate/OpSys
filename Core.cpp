@@ -292,9 +292,12 @@ void Core::run() {
 								+ std::to_string(temp->getMemorySize()) + " "
 								+ std::to_string(temp->getExecutionTime()) + " "
 								+ std::to_string(temp->getTimeOfArrival()) + " "
-								+ std::to_string(temp->getCPU())
-								+ "\n";
+								+ std::to_string(temp->getCPU()) + "\n";
 						}
+					}
+					if (m_Completed->getPCBCount()) {
+						m_TaskManager += "\n\n\n Total time to completion: " + std::to_string(m_batchTime) + "\n" +
+							" Average completion time: " + std::to_string(m_batchTime / m_Completed->getPCBCount());
 					}
 					break;
 				case Commands::CLEAR_COMPLETED:
@@ -314,10 +317,10 @@ void Core::run() {
 				m_icommand.erase(m_icommand.begin());
 			} //reading commands
 		} //erorr codes
-//test
-		cout << "Ready Queue: " << m_Ready->getPCBCount() << std::endl;
-		cout << "Blocked Queue: " << m_Blocked->getPCBCount() << std::endl;
-		cout << "Completed Queue: " << m_Completed->getPCBCount() << endl;
+//test get count for all queues
+		//cout << "Ready Queue: " << m_Ready->getPCBCount() << std::endl;
+		//cout << "Blocked Queue: " << m_Blocked->getPCBCount() << std::endl;
+		//cout << "Completed Queue: " << m_Completed->getPCBCount() << endl;
 //end test
 		//user predefined keys and visual buttons input
 		switch (uinput) {
@@ -456,8 +459,10 @@ void Core::run() {
 		runPrograms();
 	} while (m_running);
 }
-//run pcbs
-void Core::runPrograms() {
+//run pcbs return total completion time for all processes
+int Core::runPrograms() {
+	//keep track of all processes
+	static int completionTime = 0;
 	for (int i = 0; i < m_Ready->getPCBCount(); i++) {
 		PCB* temp = m_Ready->getPCBatIndex(i);
 		if (temp) {
@@ -468,13 +473,14 @@ void Core::runPrograms() {
 				//if still executing
 				if (exectime > 0) {
 					temp->setTimeOfExecution(--exectime);
+					completionTime++;
 				}
 				//remove from ready queue
 				else {
 					temp->setState(PROCESS_STATE_COMPLETED);
 					m_Completed->insertPCBatEnd(temp);
 					m_Ready->removePCB(temp);
-//test removal
+//test queue removal
 //					cout << m_Ready->getPCBCount() << endl;
 //					system("pause");
 //end test
@@ -482,6 +488,11 @@ void Core::runPrograms() {
 			}
 		}
 	}
+	//once done return batchtime
+	if (m_Ready->getPCBCount() == 0 && m_Completed->getPCBCount() != 0) {
+		m_batchTime = completionTime;
+	}
+	return completionTime;
 }
 
 void Core::fpsCap() {

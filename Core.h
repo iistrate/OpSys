@@ -73,6 +73,8 @@ private:
 	PCBQueue* m_Blocked;
 	PCBQueue* m_Completed;
 
+	int m_batchTime;
+
 	//image sets
 	vector < Image* > m_Images;
 	vector < Image* > m_Images_CMD;
@@ -89,7 +91,8 @@ public:
 	Core::Core() :m_running(false), m_pRenderer(0), m_pWindow(0), m_fps(0),
 		m_fpsCap(Globals::FPS_CAP), m_turn(0), m_debugMode(false), m_cameraMode(false), m_execute(false),
 		m_commandCursor(0), m_showcPanel(false), m_createdPanel(false), m_showDate(false), m_showHelp(false),
-		m_showVersion(false), m_showTM(false) {}	
+		m_showVersion(false), m_showTM(false), m_batchTime(0) {}
+
 	//handles sdl vars
 	~Core();
 
@@ -110,8 +113,8 @@ public:
 	//add system commands to user command
 	void addSystem(void);
 
-	//run pcbs
-	void runPrograms();
+	//run pcbs; return total time
+	int runPrograms();
 };
 
 #endif
