@@ -44,9 +44,6 @@ public:
 	void setState(int state) {
 		m_processState = state;
 	}
-	void setIndex(int index) {
-		m_index = index;
-	}
 	void setMemorySize(int m) {
 		m_memory = m;
 	}
@@ -60,9 +57,6 @@ public:
 		m_cpu = c;
 	}
 
-	int getIndex() {
-		return m_index;
-	}
 	std::string getName() {
 		return m_name;
 	}

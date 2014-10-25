@@ -70,7 +70,6 @@ void Core::run() {
 		//send string to python and get sanitized string, list of commands, 
 		//list of parameters and a list of error codes as a vector of ints
 		m_scommand = Parser->parseString(m_icommand, m_scommand, m_parameters, m_errorCodes);
-		
 		//reconsider removal used only for special chars
 		Ui.setStringCommand(m_scommand);
 		//end reconsider
@@ -97,7 +96,6 @@ void Core::run() {
 						PCB* temp = m_Ready->findPCB(m_parameters[0]);
 						if (temp) {
 							m_Ready->removePCB(temp);
-							m_Ready->freePCB(temp);
 						}
 					}
 					break;
@@ -307,18 +305,19 @@ void Core::run() {
 					}
 					break;
 				} //command switch
-				//once were done with them dismiss 
+				//once we're done with the commands clear command queues 
 				m_scommand.clear();
 				m_parameters.clear();
 				Ui.setStringCommand(m_scommand);
+				//in fifo
 				m_icommand.erase(m_icommand.begin());
 			} //reading commands
 		} //erorr codes
-//
+//test
 		cout << "Ready Queue: " << m_Ready->getPCBCount() << std::endl;
 		cout << "Blocked Queue: " << m_Blocked->getPCBCount() << std::endl;
 		cout << "Completed Queue: " << m_Completed->getPCBCount() << endl;
-		//
+//end test
 		//user predefined keys and visual buttons input
 		switch (uinput) {
 			case CONTROLS::QUIT:
@@ -461,18 +460,20 @@ void Core::runPrograms() {
 	for (int i = 0; i < m_Ready->getPCBCount(); i++) {
 		PCB* temp = m_Ready->getPCBatIndex(i);
 		if (temp) {
-			//get execution time
-			int exectime = temp->getExecutionTime();
-			//if still executing
-			if (exectime > 0) {
-				exectime--;
-				temp->setTimeOfExecution(exectime);
-			}
-			//remove from ready queue
-			else {
-				temp->setState(PROCESS_STATE_COMPLETED);
-				m_Completed->insertPCBatEnd(temp);
-				m_Ready->removePCB(temp);
+			//only run the ones that are set to running
+			if (temp->getState() == PCBi::PROCESS_STATE_RUNNING) {
+				//get execution time
+				int exectime = temp->getExecutionTime();
+				//if still executing
+				if (exectime > 0) {
+					temp->setTimeOfExecution(--exectime);
+				}
+				//remove from ready queue
+				else {
+					temp->setState(PROCESS_STATE_COMPLETED);
+					m_Completed->insertPCBatEnd(temp);
+					m_Ready->removePCB(temp);
+				}
 			}
 		}
 	}

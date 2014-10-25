@@ -48,7 +48,6 @@ PCB* PCBQueue::setupPCB(std::string name, int priority, int classType, int memor
 void PCBQueue::insertPCBatEnd(PCB* pcb) {
 	//node to be inserted
 	PCBNode* newNode = new PCBNode(pcb);
-	pcb->setIndex(m_PCBcount);
 	//if there's no PCB's allocate node to head
 	if (m_PCBcount == 0) {
 		m_head = newNode;
@@ -91,11 +90,13 @@ PCB* PCBQueue::getPCBatIndex(int index) {
 	//create node navigator, link navigator to start of list
 	PCBNode* navigator = m_head;
 	//traverse nodes
-	while (navigator != 0) {
-		if (navigator->getPCB()->getIndex() == index) {
+	int count = 0;
+	while (navigator != 0 && count <= m_PCBcount) {
+		if (count == index) {
 			return navigator->getPCB();
 		}
 		navigator = navigator->getNext();
+		count++;
 	}
 	return 0;
 }
@@ -128,7 +129,6 @@ void PCBQueue::removePCB(PCB* pcb) {
 				m_PCBcount--;
 				break;
 			}
-
 		}
 		navigator = navigator->getNext();
 	}
