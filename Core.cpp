@@ -287,6 +287,7 @@ void Core::run() {
 						}
 						m_icommand.push_back(SHOW_RUNNING);
 					}
+					m_execute = true;
 					break;
 				case Commands::SHOW_COMPLETED:
 					m_TaskManager = "Show Completed PCB's\nN: Prty: Cl: St: Mem: ExecTime: ArrTime: CPU: \n";
@@ -462,8 +463,10 @@ void Core::run() {
 		fpsCap();
 		//increase game turn
 		m_turn++;
-		//run programs
-		runPrograms();
+		if (m_execute) {
+			//run programs
+			runPrograms();
+		}
 	} while (m_running);
 }
 //run pcbs return total completion time for all processes
@@ -541,6 +544,7 @@ int Core::runPrograms() {
 	//once done return batchtime
 	if (m_Ready->getPCBCount() == 0 && m_Completed->getPCBCount() != 0) {
 		m_batchTime = completionTime;
+		m_execute = false;
 	}
 	return completionTime;
 }
