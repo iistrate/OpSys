@@ -17,7 +17,7 @@ public:
 	Scheduler(PCBQueue& Ready, PCBQueue& Blocked): m_Ready(Ready), m_Blocked(Blocked) {}
 	
 	std::vector < std::vector < std::string > > parseFile(std::string filename);
-	void addPCBS(std::string filename);
+	void addPCBS(std::string filename, const int sortBy);
 };
 
 #endif

@@ -261,12 +261,22 @@ void Core::run() {
 				case Commands::HIDE_TASK_MANAGER:
 					m_showTM = false;
 					break;
-				case Commands::READ_FROM_FILE:
+				case Commands::SHORTEST_JOB_FIRST:
 					if (m_parameters.size() > 0) {
 						//from file to scheduler
-						E1Scheduler->addPCBS(m_parameters[0]);
+						E1Scheduler->addPCBS(m_parameters[0], TIME_REMAINING);
 						//show processes
 						m_icommand.push_back(SHOW_READY);
+						m_runType = SHORTEST_JOB_FIRST;
+					}
+					break;
+				case Commands::FIRST_IN_FIRST_OUT:
+					if (m_parameters.size() > 0) {
+						//from file to scheduler
+						E1Scheduler->addPCBS(m_parameters[0], TIME_OF_ARRIVAL);
+						//show processes
+						m_icommand.push_back(SHOW_READY);
+						m_runType = FIRST_IN_FIRST_OUT;
 					}
 					break;
 				case Commands::START_PROCESSES:
@@ -303,6 +313,7 @@ void Core::run() {
 				case Commands::CLEAR_COMPLETED:
 					m_Completed->clearQueue();
 					m_batchTime = 0;
+					m_isystemCommands.push_back(SHOW_COMPLETED);
 					break;
 				} //command switch
 				//once we're done with the commands clear command queues 
@@ -459,23 +470,38 @@ void Core::run() {
 int Core::runPrograms() {
 	//keep track of all processes
 	static int completionTime = 0;
-	for (int i = 0; i < m_Ready->getPCBCount(); i++) {
-		PCB* temp = m_Ready->getPCBatIndex(i);
-		if (temp) {
-			//only run the ones that are set to running
-			if (temp->getState() == PCBi::PROCESS_STATE_RUNNING) {
-				//get execution time
+	if (m_runType == SHORTEST_JOB_FIRST || m_runType == FIRST_IN_FIRST_OUT) {
+		//start running each job starting at the front once arrival time is 0
+		//decrease arrival time on each iteration
+		for (int i = 0; i < m_Ready->getPCBCount(); i++) {
+			PCB* temp = m_Ready->getPCBatIndex(i);
+			if (temp) {
+				//only run the ones that are set to running
+				if (temp->getState() == PCBi::PROCESS_STATE_RUNNING) {
+					int arrivalTime = temp->getTimeOfArrival();
+					if (arrivalTime > 0) {
+						temp->setTimeOfArrival(--arrivalTime);
+					}
+				}
+			}
+		}
+		if (m_Ready->getPCBCount()) {
+			//execute on first; fifo sorted by arival time, sjf sorted by execution time
+			//in both cases we work on the first element
+			PCB* temp = m_Ready->getPCBatIndex(0);
+			//if ready to execute
+			if (temp->getTimeOfArrival() == 0) {
+				//execute
 				int exectime = temp->getExecutionTime();
-				//if still executing
 				if (exectime > 0) {
 					temp->setTimeOfExecution(--exectime);
-					completionTime++;
 				}
 				//remove from ready queue
 				else {
 					temp->setState(PROCESS_STATE_COMPLETED);
 					m_Completed->insertPCBatEnd(temp);
 					m_Ready->removePCB(temp);
+					m_isystemCommands.push_back(SHOW_COMPLETED);
 //test queue removal
 //					cout << m_Ready->getPCBCount() << endl;
 //					system("pause");
@@ -483,7 +509,35 @@ int Core::runPrograms() {
 				}
 			}
 		}
+		completionTime++;
 	}
+//	//round robin without time quantum
+//	for (int i = 0; i < m_Ready->getPCBCount(); i++) {
+//		PCB* temp = m_Ready->getPCBatIndex(i);
+//		if (temp) {
+//			//only run the ones that are set to running
+//			if (temp->getState() == PCBi::PROCESS_STATE_RUNNING) {
+//				//get execution time
+//				int exectime = temp->getExecutionTime();
+//				//if still executing
+//				if (exectime > 0) {
+//					temp->setTimeOfExecution(--exectime);
+//					completionTime++;
+//				}
+//				//remove from ready queue
+//				else {
+//					temp->setState(PROCESS_STATE_COMPLETED);
+//					m_Completed->insertPCBatEnd(temp);
+//					m_Ready->removePCB(temp);
+//					m_isystemCommands.push_back(SHOW_COMPLETED);
+////test queue removal
+////					cout << m_Ready->getPCBCount() << endl;
+////					system("pause");
+////end test
+//				}
+//			}
+//		}
+//	}
 	//once done return batchtime
 	if (m_Ready->getPCBCount() == 0 && m_Completed->getPCBCount() != 0) {
 		m_batchTime = completionTime;

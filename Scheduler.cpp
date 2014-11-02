@@ -26,7 +26,7 @@ std::vector < std::vector < std::string > > Scheduler::parseFile(std::string fil
 	file.close();
 	return PCBS;
 }
-void Scheduler::addPCBS(std::string filename) {
+void Scheduler::addPCBS(std::string filename, int sortBy) {
 	std::vector < std::vector < std::string > > PcbsInfo = parseFile(filename + ".txt");
 	//
 	//sort vector by shell sort
@@ -36,7 +36,8 @@ void Scheduler::addPCBS(std::string filename) {
 		//right side of array ++ < length
 		for (int i = gap; i < PcbsInfo.size(); i++) {
 			//left side of array ++ < beginning of right side
-			for (int j = i - gap; j >= 0 && j < i && (atoi(PcbsInfo[j][5].c_str()) > atoi(PcbsInfo[j + gap][5].c_str())); j -= gap) {
+			//0 name, 1 class, 2 priority, 3 memory, 4 time remaining, 5 time of arrival, 6 percentage of cpu
+			for (int j = i - gap; j >= 0 && j < i && (atoi(PcbsInfo[j][sortBy].c_str()) > atoi(PcbsInfo[j + gap][sortBy].c_str())); j -= gap) {
 				temp = PcbsInfo[j];
 				PcbsInfo[j] = PcbsInfo[j + gap];
 				PcbsInfo[j + gap] = temp;
