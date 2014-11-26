@@ -49,8 +49,12 @@ int UserInput::getCommand() {
 			SDL_GetMouseState(&m_imouseX, &m_imouseY);
 			break;
 		case SDL_MOUSEBUTTONDOWN:
-			if (SDL_BUTTON_RIGHT) {
+			if (event.button.button == SDL_BUTTON_RIGHT) {
 				m_ipressed = RIGHT_CLICK;
+				break;
+			}
+			else if (event.button.button == SDL_BUTTON_LEFT) {
+				m_ipressed = LEFT_CLICK;
 				break;
 			}
 		case SDL_MOUSEBUTTONUP:

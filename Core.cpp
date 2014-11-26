@@ -338,7 +338,7 @@ void Core::run() {
 			case CONTROLS::DEBUG_MODE:
 				m_debugMode = m_debugMode == false ? true : false;
 				break;
-			case CONTROLS::RIGHT_CLICK:
+			case CONTROLS::LEFT_CLICK:
 				//check if panel is opened
 				if (m_showcPanel) {
 					//check if it is in the panel are
@@ -512,6 +512,9 @@ int Core::runPrograms() {
 				}
 			}
 		}
+//test completion time
+//		cout << completionTime << endl;
+//end test
 		completionTime++;
 	}
 //	//round robin without time quantum
@@ -544,6 +547,7 @@ int Core::runPrograms() {
 	//once done return batchtime
 	if (m_Ready->getPCBCount() == 0 && m_Completed->getPCBCount() != 0) {
 		m_batchTime = completionTime;
+		completionTime = 0;
 		m_execute = false;
 	}
 	return completionTime;
