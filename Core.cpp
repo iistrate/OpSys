@@ -471,11 +471,10 @@ void Core::run() {
 }
 //run pcbs return total completion time for all processes
 int Core::runPrograms() {
-	//keep track of all processes
+	//time scale
 	static int completionTime = 0;
 	if (m_runType == SHORTEST_JOB_FIRST || m_runType == FIRST_IN_FIRST_OUT) {
-		//start running each job starting at the front once arrival time is 0
-		//decrease arrival time on each iteration
+		//decrease arrival time on each iteration for all pcbs
 		for (int i = 0; i < m_Ready->getPCBCount(); i++) {
 			PCB* temp = m_Ready->getPCBatIndex(i);
 			if (temp) {
@@ -488,6 +487,7 @@ int Core::runPrograms() {
 				}
 			}
 		}
+		//start running each job starting at the front once arrival time is 0
 		if (m_Ready->getPCBCount()) {
 			//execute on first; fifo sorted by arival time, sjf sorted by execution time
 			//in both cases we work on the first element
@@ -501,6 +501,7 @@ int Core::runPrograms() {
 				}
 				//remove from ready queue
 				else {
+					m_batchTime += completionTime;
 					temp->setState(PROCESS_STATE_COMPLETED);
 					m_Completed->insertPCBatEnd(temp);
 					m_Ready->removePCB(temp);
@@ -546,7 +547,6 @@ int Core::runPrograms() {
 //	}
 	//once done return batchtime
 	if (m_Ready->getPCBCount() == 0 && m_Completed->getPCBCount() != 0) {
-		m_batchTime = completionTime;
 		completionTime = 0;
 		m_execute = false;
 	}
