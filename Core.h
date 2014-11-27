@@ -25,6 +25,7 @@ private:
 	int m_turn;
 	int m_commandCursor;
 	int m_runType;
+	int m_timeQuantum;
 
 	//SDL vars
 	SDL_Window* m_pWindow;

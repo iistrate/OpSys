@@ -297,6 +297,16 @@ void Core::run() {
 						m_runType = FIRST_IN_FIRST_OUT;
 					}
 					break;
+				case Commands::ROUND_ROBIN_SCHEDULLING:
+					if (m_parameters.size() > 0) {
+						//from file to scheduler
+						E1Scheduler->addPCBS(m_parameters[0], TIME_OF_ARRIVAL);
+						//show processes
+						m_icommand.push_back(SHOW_READY);
+						m_runType = ROUND_ROBIN_SCHEDULLING;
+						m_timeQuantum = atoi(m_parameters[1].c_str());
+					}
+					break;
 				case Commands::START_PROCESSES:
 					for (int i = 0; i < m_Ready->getPCBCount(); i++) {
 						temp = m_Ready->getPCBatIndex(i);
