@@ -242,6 +242,48 @@ def stringToCommand(string):
                         #error code not an int
                         errors.append(3);
                 commands.append(21)
+            elif (word.lower() == "MLFQ".lower()):
+                if (sarray[key+1]):
+                    if (isinstance(sarray[key+1], str) and not sarray[key+1].isdigit()):
+                        #append file name to be opened
+                        params.append(sarray[key+1])
+                    else:
+                        #error code not a string
+                        errors.append(2)
+                if (sarray[key+2]):
+                    if (sarray[key+2].isdigit()):
+                        if (int(sarray[key+2]) >= 0 and int(sarray[key+2]) <= 10):
+                            #append time quantum
+                            params.append(sarray[key+2])
+                        else:
+                            #error code int range exceeded
+                            errors.append(4)
+                    else:
+                        #error code not an int
+                        errors.append(3);
+                if (sarray[key+3]):
+                    if (sarray[key+3].isdigit()):
+                        if (int(sarray[key+3]) >= 0 and int(sarray[key+3]) <= 10):
+                            #append time quantum
+                            params.append(sarray[key+3])
+                        else:
+                            #error code int range exceeded
+                            errors.append(4)
+                    else:
+                        #error code not an int
+                        errors.append(3);
+                if (sarray[key+4]):
+                    if (sarray[key+4].isdigit()):
+                        if (int(sarray[key+4]) >= 0 and int(sarray[key+4]) <= 10):
+                            #append time quantum
+                            params.append(sarray[key+4])
+                        else:
+                            #error code int range exceeded
+                            errors.append(4)
+                    else:
+                        #error code not an int
+                        errors.append(3);
+                commands.append(22)
             elif (word.lower() == "Dispatch".lower()):
                 commands.append(15)
             elif (word.lower() == "ShowCompleted".lower()):

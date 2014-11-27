@@ -307,6 +307,21 @@ void Core::run() {
 						m_timeQuantum = atoi(m_parameters[1].c_str());
 					}
 					break;
+				case Commands::MULTI_LEVEL_FEEDBACK_QUEUE:
+					if (m_parameters.size() > 0) {
+						//from file to scheduler
+						E1Scheduler->addPCBS(m_parameters[0], TIME_OF_ARRIVAL);
+						//show processes
+						m_icommand.push_back(SHOW_READY);
+						m_runType = MULTI_LEVEL_FEEDBACK_QUEUE;
+						//queue nr
+						m_mlfq[0] = atoi(m_parameters[1].c_str());
+						//time slot for each run
+						m_mlfq[1] = atoi(m_parameters[2].c_str());
+						//time before moving to top
+						m_mlfq[2] = atoi(m_parameters[3].c_str());
+					}
+					break;
 				case Commands::START_PROCESSES:
 					for (int i = 0; i < m_Ready->getPCBCount(); i++) {
 						temp = m_Ready->getPCBatIndex(i);

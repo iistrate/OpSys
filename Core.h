@@ -26,6 +26,8 @@ private:
 	int m_commandCursor;
 	int m_runType;
 	int m_timeQuantum;
+	int m_batchTime;
+	int m_mlfq[3];
 
 	//SDL vars
 	SDL_Window* m_pWindow;
@@ -74,8 +76,6 @@ private:
 	PCBQueue* m_Ready;
 	PCBQueue* m_Blocked;
 	PCBQueue* m_Completed;
-
-	int m_batchTime;
 
 	//image sets
 	vector < Image* > m_Images;
