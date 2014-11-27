@@ -131,8 +131,6 @@ void PCBQueue::removePCB(PCB* pcb) {
 						m_head = navigator->getNext();
 						m_head->setPrev(0);
 					}
-					else {
-					}
 				}
 				else if (navigator == m_tail) {
 					m_tail = navigator->getPrev();

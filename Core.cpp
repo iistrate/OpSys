@@ -502,7 +502,7 @@ int Core::runPrograms() {
 	//time scale
 	static int completionTime = 0;
 	if (m_runType == SHORTEST_JOB_FIRST || m_runType == FIRST_IN_FIRST_OUT || m_runType == PRE_EMPTIVE_SJF
-		|| m_runType == FIXED_PRIORITY_PRE_EMPTIVE) {
+		|| m_runType == FIXED_PRIORITY_PRE_EMPTIVE || m_runType == ROUND_ROBIN_SCHEDULLING) {
 		//decrease arrival time on each iteration for all pcbs
 		for (int i = 0; i < m_Ready->getPCBCount(); i++) {
 			PCB* temp = m_Ready->getPCBatIndex(i);
@@ -545,6 +545,17 @@ int Core::runPrograms() {
 					}
 				}
 			}
+			//each process runs for a total of time quantum
+			else if (m_runType == ROUND_ROBIN_SCHEDULLING) {
+				static int turn = -1;
+				if (completionTime % m_timeQuantum == 0) {
+					turn += 1;
+				}
+				if (turn + 1 > m_Ready->getPCBCount()) {
+					turn = 0;
+				}
+				first = m_Ready->getPCBatIndex(turn);
+			}
 			//if ready to execute
 			if (first->getTimeOfArrival() == 0) {
 				//execute
@@ -571,33 +582,6 @@ int Core::runPrograms() {
 //end test
 		completionTime++;
 	}
-//	//round robin without time quantum
-//	for (int i = 0; i < m_Ready->getPCBCount(); i++) {
-//		PCB* temp = m_Ready->getPCBatIndex(i);
-//		if (temp) {
-//			//only run the ones that are set to running
-//			if (temp->getState() == PCBi::PROCESS_STATE_RUNNING) {
-//				//get execution time
-//				int exectime = temp->getExecutionTime();
-//				//if still executing
-//				if (exectime > 0) {
-//					temp->setTimeOfExecution(--exectime);
-//					completionTime++;
-//				}
-//				//remove from ready queue
-//				else {
-//					temp->setState(PROCESS_STATE_COMPLETED);
-//					m_Completed->insertPCBatEnd(temp);
-//					m_Ready->removePCB(temp);
-//					m_isystemCommands.push_back(SHOW_COMPLETED);
-////test queue removal
-////					cout << m_Ready->getPCBCount() << endl;
-////					system("pause");
-////end test
-//				}
-//			}
-//		}
-//	}
 	//once done return batchtime
 	if (m_Ready->getPCBCount() == 0 && m_Completed->getPCBCount() != 0) {
 		completionTime = 0;
