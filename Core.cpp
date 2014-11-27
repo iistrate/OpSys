@@ -279,6 +279,15 @@ void Core::run() {
 						m_runType = PRE_EMPTIVE_SJF;
 					}
 					break;
+				case Commands::FIXED_PRIORITY_PRE_EMPTIVE:
+					if (m_parameters.size() > 0) {
+						//from file to scheduler
+						E1Scheduler->addPCBS(m_parameters[0], TIME_OF_ARRIVAL);
+						//show processes
+						m_icommand.push_back(SHOW_READY);
+						m_runType = FIXED_PRIORITY_PRE_EMPTIVE;
+					}
+					break;
 				case Commands::FIRST_IN_FIRST_OUT:
 					if (m_parameters.size() > 0) {
 						//from file to scheduler
@@ -482,7 +491,8 @@ void Core::run() {
 int Core::runPrograms() {
 	//time scale
 	static int completionTime = 0;
-	if (m_runType == SHORTEST_JOB_FIRST || m_runType == FIRST_IN_FIRST_OUT || m_runType == PRE_EMPTIVE_SJF) {
+	if (m_runType == SHORTEST_JOB_FIRST || m_runType == FIRST_IN_FIRST_OUT || m_runType == PRE_EMPTIVE_SJF
+		|| m_runType == FIXED_PRIORITY_PRE_EMPTIVE) {
 		//decrease arrival time on each iteration for all pcbs
 		for (int i = 0; i < m_Ready->getPCBCount(); i++) {
 			PCB* temp = m_Ready->getPCBatIndex(i);
@@ -498,10 +508,10 @@ int Core::runPrograms() {
 		}
 		//start running each job starting at the front once arrival time is 0
 		if (m_Ready->getPCBCount()) {
-			//execute on first; fifo sorted by arival time, sjf sorted by execution time
+			//execute on first; fifo sorted by arival time, sjf, fpps, and stcf sorted by execution time
 			//in both cases we work on the first element
 			PCB* first = m_Ready->getPCBatIndex(0);
-			//if pre emptive look at all jobs with arival 0 then see which has the fastest execution time and execute it
+			//if pre emptive shortest time to completion look at all jobs with arival 0 then see which has the fastest execution time and execute it
 			if (m_runType == PRE_EMPTIVE_SJF) {
 				int executionTime = first->getExecutionTime();
 				for (int i = 0; i < m_Ready->getPCBCount(); i++) {
@@ -513,7 +523,18 @@ int Core::runPrograms() {
 					}
 				}
 			}
-			cout << m_Ready->getPCBatIndex(0)->getName() << endl;
+			//sort by priority
+			else if (m_runType == FIXED_PRIORITY_PRE_EMPTIVE) {
+				int priority = first->getPriority();
+				for (int i = 0; i < m_Ready->getPCBCount(); i++) {
+					PCB* compare = m_Ready->getPCBatIndex(i);
+					if (compare->getTimeOfArrival() == 0) {
+						if (compare->getPriority() < priority) {
+							first = compare;
+						}
+					}
+				}
+			}
 			//if ready to execute
 			if (first->getTimeOfArrival() == 0) {
 				//execute
