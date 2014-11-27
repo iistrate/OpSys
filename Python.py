@@ -204,6 +204,15 @@ def stringToCommand(string):
                         #error code not a string
                         errors.append(2)
                 commands.append(18)
+            elif (word.lower() == "STCF".lower()):
+                if (sarray[key+1]):
+                    if (isinstance(sarray[key+1], str) and not sarray[key+1].isdigit()):
+                        #append file name to be opened
+                        params.append(sarray[key+1])
+                    else:
+                        #error code not a string
+                        errors.append(2)
+                commands.append(19)
             elif (word.lower() == "Dispatch".lower()):
                 commands.append(15)
             elif (word.lower() == "ShowCompleted".lower()):

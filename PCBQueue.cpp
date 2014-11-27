@@ -143,7 +143,7 @@ void PCBQueue::removePCB(PCB* pcb) {
 					prev = navigator->getPrev();
 					next = navigator->getNext();
 					prev->setNext(next);
-					next->setPrev(prev);
+					//next->setPrev(prev);
 				}
 				m_PCBcount--;
 				break;

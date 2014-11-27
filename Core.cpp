@@ -270,6 +270,15 @@ void Core::run() {
 						m_runType = SHORTEST_JOB_FIRST;
 					}
 					break;
+				case Commands::PRE_EMPTIVE_SJF:
+					if (m_parameters.size() > 0) {
+						//from file to scheduler
+						E1Scheduler->addPCBS(m_parameters[0], TIME_OF_ARRIVAL);
+						//show processes
+						m_icommand.push_back(SHOW_READY);
+						m_runType = PRE_EMPTIVE_SJF;
+					}
+					break;
 				case Commands::FIRST_IN_FIRST_OUT:
 					if (m_parameters.size() > 0) {
 						//from file to scheduler
@@ -473,7 +482,7 @@ void Core::run() {
 int Core::runPrograms() {
 	//time scale
 	static int completionTime = 0;
-	if (m_runType == SHORTEST_JOB_FIRST || m_runType == FIRST_IN_FIRST_OUT) {
+	if (m_runType == SHORTEST_JOB_FIRST || m_runType == FIRST_IN_FIRST_OUT || m_runType == PRE_EMPTIVE_SJF) {
 		//decrease arrival time on each iteration for all pcbs
 		for (int i = 0; i < m_Ready->getPCBCount(); i++) {
 			PCB* temp = m_Ready->getPCBatIndex(i);
@@ -491,20 +500,33 @@ int Core::runPrograms() {
 		if (m_Ready->getPCBCount()) {
 			//execute on first; fifo sorted by arival time, sjf sorted by execution time
 			//in both cases we work on the first element
-			PCB* temp = m_Ready->getPCBatIndex(0);
+			PCB* first = m_Ready->getPCBatIndex(0);
+			//if pre emptive look at all jobs with arival 0 then see which has the fastest execution time and execute it
+			if (m_runType == PRE_EMPTIVE_SJF) {
+				int executionTime = first->getExecutionTime();
+				for (int i = 0; i < m_Ready->getPCBCount(); i++) {
+					PCB* compare = m_Ready->getPCBatIndex(i);
+					if (compare->getTimeOfArrival() == 0) {
+						if (compare->getExecutionTime() < executionTime) {
+							first = compare;
+						}
+					}
+				}
+			}
+			cout << m_Ready->getPCBatIndex(0)->getName() << endl;
 			//if ready to execute
-			if (temp->getTimeOfArrival() == 0) {
+			if (first->getTimeOfArrival() == 0) {
 				//execute
-				int exectime = temp->getExecutionTime();
+				int exectime = first->getExecutionTime();
 				if (exectime > 0) {
-					temp->setTimeOfExecution(--exectime);
+					first->setTimeOfExecution(--exectime);
 				}
 				//remove from ready queue
 				else {
 					m_batchTime += completionTime;
-					temp->setState(PROCESS_STATE_COMPLETED);
-					m_Completed->insertPCBatEnd(temp);
-					m_Ready->removePCB(temp);
+					first->setState(PROCESS_STATE_COMPLETED);
+					m_Completed->insertPCBatEnd(first);
+					m_Ready->removePCB(first);
 					m_isystemCommands.push_back(SHOW_COMPLETED);
 //test queue removal
 //					cout << m_Ready->getPCBCount() << endl;
