@@ -5,6 +5,9 @@
 #include <ctime>
 #include <string>
 #include <cassert>
+#include <random>
+#include <stdlib.h>
+
 //user defined headers
 #include "TextureManager.h"
 #include "Globals.h"
@@ -12,6 +15,7 @@
 #include "GUI.h"
 #include "StringParser.h"
 #include "Scheduler.h"
+
 
 using std::vector;
 using std::cout;

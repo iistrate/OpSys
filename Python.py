@@ -294,7 +294,7 @@ def stringToCommand(string):
                         errors.append(2)
                 if (sarray[key+2]):
                     if (sarray[key+2].isdigit()):
-                        if (int(sarray[key+2]) >= 0 and int(sarray[key+2]) <= 10):
+                        if (int(sarray[key+2]) >= 0 and int(sarray[key+2]) <= 9999999):
                             #append time quantum
                             params.append(sarray[key+2])
                         else:

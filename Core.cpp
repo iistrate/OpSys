@@ -27,7 +27,8 @@ void Core::init(const char* title, int x, int y, int w, int h, int flags) {
 
 void Core::run() {
 	init("the E1 2000 Operating System", 50, 50, WINDOW::SCREEN_WIDTH, WINDOW::SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-	
+	srand(time(NULL));
+
 	//user input
 	int uinput;
 	
@@ -639,7 +640,26 @@ int Core::runPrograms() {
 				first = runAtOnce[turn]->getPriority() > first->getPriority() ? first : runAtOnce[turn];
 			}
 			else if (m_runType == LOTTERY_SCHEDULLING) {
-
+				//random seed
+				int winningTicket = rand() % m_tickets;
+				int counter = 0;
+//test ticket nr
+//				cout << winningTicket << endl;
+//				system("pause");
+//end
+				//see which job to run
+				for (int i = 0; i < m_Ready->getPCBCount(); i++) {
+					int cpuPercent = m_Ready->getPCBatIndex(i)->getCPU();
+					counter += cpuPercent;
+					if (counter > winningTicket) {
+						first = m_Ready->getPCBatIndex(i);
+						break;
+					}
+				}
+//test ticket winner vs cpu
+//				cout << first->getName() << " " << first->getCPU() << " ticket: " << winningTicket << endl;
+//				system("pause");
+//end
 			}
 			//if ready to execute
 			if (first->getTimeOfArrival() == 0) {

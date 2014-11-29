@@ -5,6 +5,7 @@
 #include "Core.h"
 
 int main(int argc, char **argv) {
+
 	//start OpSys
 	Core* E1 = new Core();
 	E1->run();
