@@ -38,7 +38,8 @@ void Core::run() {
 	//directory listing
 	string directory = listDir();
 
-
+	//memory block initialization
+	Mblock = new Memory(Globals::MEMORY_SIZE);
 
 	//create process queues
 	m_Ready = new PCBQueue(true);

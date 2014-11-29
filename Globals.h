@@ -7,6 +7,7 @@ namespace Globals {
 	const int FPS_CAP = 90;
 	const int COMMAND_PANEL_LINE_WRAP = 200;
 	const int TASK_MANAGER_LINE_WRAP = 370;
+	const int MEMORY_SIZE = 1024;
 }
 
 enum WINDOW {

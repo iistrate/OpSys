@@ -15,6 +15,7 @@
 #include "GUI.h"
 #include "StringParser.h"
 #include "Scheduler.h"
+#include "Memory.h"
 
 
 using std::vector;
@@ -76,6 +77,7 @@ private:
 	UserInput Ui;
 	GUI* Panel;
 	StringParser* Parser;
+	Memory* Mblock;
 		
 	//process queues
 	PCBQueue* m_Ready;
