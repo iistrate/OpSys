@@ -28,6 +28,7 @@ private:
 	int m_timeQuantum;
 	int m_batchTime;
 	int m_mlfq[3];
+	int m_tickets;
 
 	//SDL vars
 	SDL_Window* m_pWindow;

@@ -307,6 +307,16 @@ void Core::run() {
 						m_timeQuantum = atoi(m_parameters[1].c_str());
 					}
 					break;
+				case Commands::LOTTERY_SCHEDULLING:
+					if (m_parameters.size() > 0) {
+						//from file to scheduler
+						E1Scheduler->addPCBS(m_parameters[0], TIME_OF_ARRIVAL);
+						//show processes
+						m_icommand.push_back(SHOW_READY);
+						m_runType = LOTTERY_SCHEDULLING;
+						m_tickets = atoi(m_parameters[1].c_str());
+					}
+					break;
 				case Commands::MULTI_LEVEL_FEEDBACK_QUEUE:
 					if (m_parameters.size() > 0) {
 						//from file to scheduler
@@ -517,7 +527,8 @@ int Core::runPrograms() {
 	//time scale
 	static int completionTime = 0;
 	if (m_runType == SHORTEST_JOB_FIRST || m_runType == FIRST_IN_FIRST_OUT || m_runType == PRE_EMPTIVE_SJF
-		|| m_runType == FIXED_PRIORITY_PRE_EMPTIVE || m_runType == ROUND_ROBIN_SCHEDULLING || m_runType == MULTI_LEVEL_FEEDBACK_QUEUE) {
+		|| m_runType == FIXED_PRIORITY_PRE_EMPTIVE || m_runType == ROUND_ROBIN_SCHEDULLING
+		|| m_runType == MULTI_LEVEL_FEEDBACK_QUEUE || m_runType == LOTTERY_SCHEDULLING) {
 		//decrease arrival time on each iteration for all pcbs
 		for (int i = 0; i < m_Ready->getPCBCount(); i++) {
 			PCB* temp = m_Ready->getPCBatIndex(i);
@@ -626,6 +637,9 @@ int Core::runPrograms() {
 				}
 				//see if we need to run the PCB's outside the round robin queue or if we need to run the round robin queue
 				first = runAtOnce[turn]->getPriority() > first->getPriority() ? first : runAtOnce[turn];
+			}
+			else if (m_runType == LOTTERY_SCHEDULLING) {
+
 			}
 			//if ready to execute
 			if (first->getTimeOfArrival() == 0) {
