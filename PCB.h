@@ -24,9 +24,11 @@ private:
 	int m_executionStart;
 	//cpu usage
 	int m_cpu;
+	//in execution
+	int m_executedFor;
 public:
 	PCB::PCB() : m_priority(0), m_processClass(0), m_processState(0), m_name("empty"),
-				 m_index(0), m_memory(0), m_executionTime(0), m_executionStart(0), m_cpu(0) {}
+				 m_index(0), m_memory(0), m_executionTime(0), m_executionStart(0), m_cpu(0), m_executedFor(0) {}
 
 	//sets name
 	void setName(std::string name) {
@@ -56,6 +58,9 @@ public:
 	void setCPU(int c) {
 		m_cpu = c;
 	}
+	void setExecutedFor(void) {
+		m_executedFor++;
+	}
 
 	std::string getName() {
 		return m_name;
@@ -80,6 +85,9 @@ public:
 	}
 	int getCPU() {
 		return m_cpu;
+	}
+	int getExecutedFor() {
+		return m_executedFor;
 	}
 };
 

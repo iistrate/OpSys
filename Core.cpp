@@ -580,9 +580,19 @@ int Core::runPrograms() {
 				cout << first->getName() << " " << first->getExecutionTime() << endl;
 			}
 			else if (m_runType == MULTI_LEVEL_FEEDBACK_QUEUE) {
+				//min max priority 1 to queues
 				int queues = m_mlfq[0];
+				//timeslot before downgrading
 				int timeSlot = m_mlfq[1];
+				//timeslot before bumping all up
 				int timeTopQueue = m_mlfq[2];
+
+				//see if we need to downgrade priority
+				if (first->getExecutedFor() == timeSlot) {
+					int priority = first->getPriority();
+					priority = priority + 1 <= queues ? priority + 1 : queues;
+					first->setPriority(priority);
+				}
 
 				//when running time is equal to total alloted time; move all to top queue
 				if (completionTime == timeTopQueue) {
@@ -606,7 +616,7 @@ int Core::runPrograms() {
 						}
 					}
 				}
-				//round robin for mlfq
+				//round robin for same priority
 				static int turn = -1;
 				if (completionTime % timeSlot == 0) {
 					turn += 1;
@@ -614,7 +624,8 @@ int Core::runPrograms() {
 				if (turn + 1 > runAtOnce.size()) {
 					turn = 0;
 				}
-				first = runAtOnce[turn] == NULL ? m_Ready->getPCBatIndex(0) : runAtOnce[turn];
+				//see if we need to run the PCB's outside the round robin queue or if we need to run the round robin queue
+				first = runAtOnce[turn]->getPriority() > first->getPriority() ? first : runAtOnce[turn];
 			}
 			//if ready to execute
 			if (first->getTimeOfArrival() == 0) {
@@ -622,6 +633,7 @@ int Core::runPrograms() {
 				int exectime = first->getExecutionTime();
 				if (exectime > 0) {
 					first->setTimeOfExecution(--exectime);
+					first->setExecutedFor();
 				}
 				//remove from ready queue
 				else {
