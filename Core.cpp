@@ -517,7 +517,7 @@ int Core::runPrograms() {
 	//time scale
 	static int completionTime = 0;
 	if (m_runType == SHORTEST_JOB_FIRST || m_runType == FIRST_IN_FIRST_OUT || m_runType == PRE_EMPTIVE_SJF
-		|| m_runType == FIXED_PRIORITY_PRE_EMPTIVE || m_runType == ROUND_ROBIN_SCHEDULLING) {
+		|| m_runType == FIXED_PRIORITY_PRE_EMPTIVE || m_runType == ROUND_ROBIN_SCHEDULLING || m_runType == MULTI_LEVEL_FEEDBACK_QUEUE) {
 		//decrease arrival time on each iteration for all pcbs
 		for (int i = 0; i < m_Ready->getPCBCount(); i++) {
 			PCB* temp = m_Ready->getPCBatIndex(i);
@@ -527,6 +527,10 @@ int Core::runPrograms() {
 					int arrivalTime = temp->getTimeOfArrival();
 					if (arrivalTime > 0) {
 						temp->setTimeOfArrival(--arrivalTime);
+					}
+					else if (arrivalTime == 0 && m_runType == MULTI_LEVEL_FEEDBACK_QUEUE) {
+						//when a job arrives it's priority is set to highest
+						temp->setPriority(1);
 					}
 				}
 			}
@@ -569,7 +573,48 @@ int Core::runPrograms() {
 				if (turn + 1 > m_Ready->getPCBCount()) {
 					turn = 0;
 				}
-				first = m_Ready->getPCBatIndex(turn);
+				PCB* temp = m_Ready->getPCBatIndex(turn);
+				if (temp) {
+					first = temp;
+				}
+				cout << first->getName() << " " << first->getExecutionTime() << endl;
+			}
+			else if (m_runType == MULTI_LEVEL_FEEDBACK_QUEUE) {
+				int queues = m_mlfq[0];
+				int timeSlot = m_mlfq[1];
+				int timeTopQueue = m_mlfq[2];
+
+				//when running time is equal to total alloted time; move all to top queue
+				if (completionTime == timeTopQueue) {
+					for (int i = 0; i < m_Ready->getPCBCount(); i++) {
+						PCB* temp = m_Ready->getPCBatIndex(i);
+						if (temp) {
+							temp->setPriority(1);
+						}
+					}
+				}
+				vector < PCB* > runAtOnce;
+				//run the ones with top priority/queue
+				int topQueue = first->getPriority();
+				for (int i = 0; i < m_Ready->getPCBCount(); i++) {
+					PCB* compare = m_Ready->getPCBatIndex(i);
+					if (compare) {
+						if (compare->getTimeOfArrival() == 0) {
+							if (compare->getPriority() <= topQueue) {
+								runAtOnce.push_back(compare);
+							}
+						}
+					}
+				}
+				//round robin for mlfq
+				static int turn = -1;
+				if (completionTime % timeSlot == 0) {
+					turn += 1;
+				}
+				if (turn + 1 > runAtOnce.size()) {
+					turn = 0;
+				}
+				first = runAtOnce[turn] == NULL ? m_Ready->getPCBatIndex(0) : runAtOnce[turn];
 			}
 			//if ready to execute
 			if (first->getTimeOfArrival() == 0) {

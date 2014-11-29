@@ -52,22 +52,16 @@ void PCBQueue::insertPCBatEnd(PCB* pcb) {
 	if (m_PCBcount == 0) {
 		m_head = newNode;
 	}
+	else if (m_PCBcount == 1) {
+		m_tail = newNode;
+		m_head->setNext(m_tail);
+		m_tail->setPrev(m_head);
+	}
 	else {
-		if (!m_tail) {
-			m_tail = newNode;
-			m_head->setNext(m_tail);
-			m_tail->setPrev(m_head);
-		}
-		else {
-			PCBNode* navigator;
-			navigator = m_head;
-			//go to last node
-			while (navigator->getNext() != 0) {
-				navigator = navigator->getNext();
-			}
-			navigator->setNext(newNode);
-			newNode->setPrev(navigator);
-		}
+		PCBNode* temp = m_tail;
+		m_tail = newNode;
+		temp->setNext(m_tail);
+		m_tail->setPrev(temp);
 	}
 	//increase PCB count
 	m_PCBcount++;
@@ -109,6 +103,14 @@ void PCBQueue::printPCBs() {
 	}
 }
 
+void PCBQueue::printPCBsReverse() {
+	PCBNode* navigator = m_tail;
+	while (navigator != 0) {
+		cout << navigator->getPCB()->getName() << endl;
+		navigator = navigator->getPrev();
+	}
+}
+
 void PCBQueue::clearQueue() {
 	PCBNode* navigator = m_head;
 	PCBNode* temp;
@@ -137,11 +139,11 @@ void PCBQueue::removePCB(PCB* pcb) {
 					m_tail->setNext(0);
 				}
 				else {
-					PCBNode* next, *prev;
-					prev = navigator->getPrev();
+					PCBNode *next, *prev, *temp;
 					next = navigator->getNext();
+					prev = navigator->getPrev();
 					prev->setNext(next);
-					//next->setPrev(prev);
+					next->setPrev(prev);
 				}
 				m_PCBcount--;
 				break;

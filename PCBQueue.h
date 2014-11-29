@@ -41,9 +41,10 @@ public:
 	//get pcb at index
 	PCB* getPCBatIndex(int index);
 	void printPCBs(void);
+	void printPCBsReverse(void);
 
 	//clear pcb queue
-	void clearQueue();
+	void clearQueue(void);
 };
 
 #endif
