@@ -31,11 +31,31 @@ void Memory::allocate(int size, string identifier) {
 	}
 	//increase fragment count
 	m_fragments++;
+	//take memory
 	m_freeMemory -= node->getSize();
+	//set spot to taken
+	node->setFree(false);
+
 	//test memory allocated
 	cout << "Allocated " << node->getSize() << " free memory: " << m_freeMemory << endl;
 	system("pause");
 //end
+}
+void Memory::free(string identifier) {
+	//find memory to free
+	Node* navigator = m_head;
+	while (navigator != 0) {
+		//check until we find the memory we want to free
+		if (navigator->getIdentifier().compare(identifier) == 0) {
+			//free memory
+			navigator->setIdentifier("");
+			navigator->setFree(true);
+			setFreeMemory(getFreeMemory() + navigator->getSize());
+			navigator->setSize(0);
+			return;
+		}
+		navigator = navigator->getNext();
+	}
 }
 
 void Memory::firstFit(Node* node) {

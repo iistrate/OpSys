@@ -682,6 +682,12 @@ int Core::runPrograms() {
 					m_Completed->insertPCBatEnd(first);
 					m_Ready->removePCB(first);
 					m_isystemCommands.push_back(SHOW_COMPLETED);
+					//remove from memory
+					m_Memory->free(first->getName());
+//test freeing memory
+//					cout << m_Memory->getFreeMemory() << endl;
+//					system("pause");
+//end test
 //test queue removal
 //					cout << m_Ready->getPCBCount() << endl;
 //					system("pause");

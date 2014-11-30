@@ -82,7 +82,7 @@ public:
 	}
 
 	void allocate(int size, string identifier);
-	void free(Node* node);
+	void free(string identifier);
 
 	void firstFit(Node* node);
 	void nextFit(Node* node); 
