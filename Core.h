@@ -77,7 +77,7 @@ private:
 	UserInput Ui;
 	GUI* Panel;
 	StringParser* Parser;
-	Memory* Mblock;
+	Memory* m_Memory;
 		
 	//process queues
 	PCBQueue* m_Ready;

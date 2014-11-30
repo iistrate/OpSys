@@ -78,6 +78,7 @@
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Memory.cpp" />
     <ClCompile Include="PCBQueue.cpp" />
     <ClCompile Include="Scheduler.cpp" />
     <ClCompile Include="StringParser.cpp" />
@@ -90,6 +91,7 @@
     <ClInclude Include="Globals.h" />
     <ClInclude Include="GUI.h" />
     <ClInclude Include="Image.h" />
+    <ClInclude Include="Memory.h" />
     <ClInclude Include="PCB.h" />
     <ClInclude Include="PCBNode.h" />
     <ClInclude Include="PCBQueue.h" />

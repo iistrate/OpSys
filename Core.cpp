@@ -39,7 +39,7 @@ void Core::run() {
 	string directory = listDir();
 
 	//memory block initialization
-	Mblock = new Memory(Globals::MEMORY_SIZE);
+	m_Memory = new Memory(Globals::MEMORY_SIZE);
 
 	//create process queues
 	m_Ready = new PCBQueue(true);
@@ -664,6 +664,11 @@ int Core::runPrograms() {
 			}
 			//if ready to execute
 			if (first->getTimeOfArrival() == 0) {
+				//allocate memory for process; size and name as an identifier
+				//check if process already in memory
+				if (!m_Memory->isAlocatted(first->getName()) && first->getMemorySize() <= m_Memory->getFreeMemory()) {
+					m_Memory->allocate(first->getMemorySize(), first->getName());
+				}
 				//execute
 				int exectime = first->getExecutionTime();
 				if (exectime > 0) {
