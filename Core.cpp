@@ -533,6 +533,14 @@ int Core::runPrograms() {
 	if (m_runType == SHORTEST_JOB_FIRST || m_runType == FIRST_IN_FIRST_OUT || m_runType == PRE_EMPTIVE_SJF
 		|| m_runType == FIXED_PRIORITY_PRE_EMPTIVE || m_runType == ROUND_ROBIN_SCHEDULLING
 		|| m_runType == MULTI_LEVEL_FEEDBACK_QUEUE || m_runType == LOTTERY_SCHEDULLING) {
+		//empty blocked queue; ready count should be 0 need to investigate bug
+		if (m_Ready->getPCBCount() == 1 && m_Blocked->getPCBCount() > 0) {
+			for (int i = 0; i < m_Blocked->getPCBCount(); i++) {
+				PCB* temp = m_Blocked->getPCBatIndex(i);
+				m_Ready->insertPCBatEnd(temp);
+				m_Blocked->removePCB(temp);
+			}
+		}
 		//decrease arrival time on each iteration for all pcbs
 		for (int i = 0; i < m_Ready->getPCBCount(); i++) {
 			PCB* temp = m_Ready->getPCBatIndex(i);
@@ -670,6 +678,15 @@ int Core::runPrograms() {
 				//check if process already in memory
 				if (!m_Memory->isAlocatted(first->getName()) && first->getMemorySize() <= m_Memory->getFreeMemory()) {
 					m_Memory->allocate(first->getMemorySize(), first->getName());
+				}
+				if ((first->getMemorySize() > m_Memory->getFreeMemory()) && !m_Memory->isAlocatted(first->getName())) {
+//test insuficient memory
+//					cout << "Insuficient memory for " << first->getName() << endl;
+//					system("pause");
+//end test
+					//if not enough memory put on hold
+					m_Ready->removePCB(first);
+					m_Blocked->insertPCBatEnd(first);
 				}
 				//execute
 				int exectime = first->getExecutionTime();
