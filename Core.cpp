@@ -76,6 +76,8 @@ void Core::run() {
 		Ui.setStringCommand(m_scommand);
 		//end reconsider
 
+		//get free memory
+		m_freeMemory = m_Memory->getFreeMemory();
 
 
 		//add System commands
@@ -444,7 +446,7 @@ void Core::run() {
 
 		//show images
 		Tmanager.draw(m_pRenderer, m_Images);
-		Tmanager.drawText(m_pRenderer, "Howdy, welcome to the E1 2000 please press right ctrl for menu Thanks!", 470, 210);
+		Tmanager.drawText(m_pRenderer, "Please press right ctrl for menu. Available memory: " + std::to_string(m_freeMemory) + " bytes", 470, 210);
 
 		//show panel
 		if (m_showcPanel) {

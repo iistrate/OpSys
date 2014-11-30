@@ -36,9 +36,9 @@ void Memory::allocate(int size, string identifier) {
 	//set spot to taken
 	node->setFree(false);
 
-	//test memory allocated
-	cout << "Allocated " << node->getSize() << " free memory: " << m_freeMemory << endl;
-	system("pause");
+//test memory allocated
+//cout << "Allocated " << node->getSize() << " free memory: " << m_freeMemory << endl;
+//system("pause");
 //end
 }
 void Memory::free(string identifier) {
@@ -48,10 +48,9 @@ void Memory::free(string identifier) {
 		//check until we find the memory we want to free
 		if (navigator->getIdentifier().compare(identifier) == 0) {
 			//free memory
-			navigator->setIdentifier("");
+			navigator->setIdentifier("Free spot");
 			navigator->setFree(true);
 			setFreeMemory(getFreeMemory() + navigator->getSize());
-			navigator->setSize(0);
 			return;
 		}
 		navigator = navigator->getNext();
