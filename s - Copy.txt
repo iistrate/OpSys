@@ -1,6 +1,0 @@
-TestProcess A 24 128 50 15 25
-MyPCB S 2 200 200 40 10
-SomePCB A 1 30 30 5 5
-Another S 100 400 20 20 7
-Haoles A 80 50 90 10 12
-Baoles S 5 128 5 1 9

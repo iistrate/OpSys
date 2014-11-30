@@ -151,6 +151,7 @@ void Core::run() {
 					}
 					break;
 				case Commands::SHOW_PCB:
+					system("pause");
 					m_TaskManager = "Individual PCB:\nN: Prty: Cl: St: Mem: ExecTime: ArrTime: CPU: \n";
 					if (m_parameters.size() == 1) {
 						PCB* temp = m_Ready->findPCB(m_parameters[0]);
@@ -477,7 +478,7 @@ void Core::run() {
 			Tmanager.drawText(m_pRenderer, "Help: Howdy please press version for op sys version, date for showing date, help for showing this text, directory for showing the directory and quit for quit; please note that you can also add commands to the command line. Thanks!", 20, 50);
 		}
 		if (m_showDir) {
-			Tmanager.drawText(m_pRenderer, directory, 1000, 230);
+			Tmanager.drawText(m_pRenderer, directory, 1000, 60);
 		}
 
 		//Debug mode
